@@ -1,26 +1,17 @@
-/* 🌙 黑暗主题 */
+/* 黑暗主题 */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #000000; /* 纯黑背景 */
-    color: rgb(84, 63, 75); /* 统一字体颜色 */
+    background-color: #000000;
+    color: rgb(84, 63, 75);
     text-align: center;
     padding: 20px;
 }
 
-/* 🌟 标题样式 */
-h1 {
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: rgb(84, 63, 75);
-    text-shadow: 0 0 6px rgba(84, 63, 75, 0.3);
-}
-
-/* 🌟 主要容器框架 */
+/* 主要容器 */
 .main-container {
-    background: rgb(45, 40, 44); /* 背景颜色 */
+    background: rgb(45, 40, 44);
     padding: 20px;
-    border-radius: 20px; /* 圆角 */
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,7 +22,7 @@ h1 {
     box-shadow: 0 0 10px rgba(45, 40, 44, 0.8);
 }
 
-/* 🌟 状态栏 */
+/* 状态栏 */
 .status-container {
     display: flex;
     justify-content: space-around;
@@ -39,40 +30,46 @@ h1 {
     padding: 10px 0;
 }
 
-/* 🌟 选项去掉所有框，仅保留文本 */
+/* 选项 */
 .button-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
     padding: 10px 0;
 }
 
-/* 🌟 选项文本 */
+/* 取消按钮加粗 */
 button {
-    background: none; /* 无背景 */
+    background: none;
     border: none;
-    color: rgb(183, 96, 138); /* 文字颜色 */
-    font-size: 18px;
-    font-weight: bold;
+    color: rgb(183, 96, 138);
+    font-size: 16px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-in-out;
+    font-weight: normal;
 }
 
-/* 🖱 文字悬浮效果 */
+/* 取消加粗 */
 button:hover {
     text-shadow: 0 0 8px rgba(183, 96, 138, 0.6);
 }
 
-/* 🖲 文字点击反馈 */
-button:active {
-    opacity: 0.8;
+/* 杰森对话框 */
+.dialogue-box {
+    background: rgb(45, 40, 44);
+    padding: 10px;
+    border-radius: 10px;
+    width: 90%;
+    text-align: center;
+    margin-top: 15px;
+    box-shadow: 0 0 8px rgba(84, 63, 75, 0.6);
 }
 
-/* ❌ 禁用按钮 */
-button:disabled {
-    color: rgba(183, 96, 138, 0.5);
-    cursor: not-allowed;
+/* 杰森对话文本 */
+#jasonDialogue {
+    color: rgb(183, 96, 138);
+    font-size: 16px;
 }
