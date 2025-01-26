@@ -6,20 +6,23 @@
     <title>哥谭生活模拟器</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="manifest" href="./manifest.json">
-    <script src="./app.js" defer></script>
+    <script src="./app.js" defer></script> <!-- 确保 JavaScript 在 HTML 加载后执行 -->
 </head>
 <body>
     <h1>欢迎来到哥谭</h1>
     <p>艾琳·凯瑟琳的生存挑战开始！</p>
 
-    <button onclick="eat()">吃饭（+20饱食度）</button>
-    <button onclick="work()">找工作（-3 AP, +$30）</button>
-    <button onclick="draw()">画画（-2 AP）</button>
-    <button onclick="sellPainting()">出售画作</button>
-    <button onclick="endDay()">结束一天（恢复 AP）</button>
+    <!-- 交互按钮 -->
+    <button id="eatBtn" onclick="eat()">吃饭（+20饱食度）</button>
+    <button id="workBtn" onclick="work()">找工作（-3 AP, +$30）</button>
+    <button id="drawBtn" onclick="draw()">画画（-2 AP）</button>
+    <button id="sellBtn" onclick="sellPainting()">出售画作</button>
+    <button id="endDayBtn" onclick="endDay()">结束一天（恢复 AP）</button>
 
+    <!-- 显示状态信息 -->
     <p id="status">状态加载中...</p>
 
+    <!-- 确保 PWA 能正常运行 -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./service-worker.js').then(() => {
