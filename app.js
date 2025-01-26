@@ -19,28 +19,28 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("money").innerText = money;
     document.getElementById("paintings").innerText = paintings.length;
 
-    // 更新状态栏颜色（动态变化）
+    // 更新状态栏颜色
     let hungerElement = document.querySelector(".hunger-display");
     let moneyElement = document.querySelector(".money-display");
 
     // 根据饱食度变化颜色
     if (hunger > 60) {
-        hungerElement.style.background = "#ff4500"; // 正常（红色）
+        hungerElement.style.background = "linear-gradient(45deg, #ff7700, #ff4500)";
     } else if (hunger > 30) {
-        hungerElement.style.background = "#ffa500"; // 低（橙色）
+        hungerElement.style.background = "linear-gradient(45deg, #ff9900, #ff6600)";
     } else {
-        hungerElement.style.background = "#ff0000"; // 危险（深红）
+        hungerElement.style.background = "linear-gradient(45deg, #ff3300, #cc0000)";
     }
 
     // 根据金钱变化颜色
     if (money >= 500) {
-        moneyElement.style.background = "#ffd700"; // 富有（黄金色）
+        moneyElement.style.background = "linear-gradient(45deg, #ffd700, #ffaa00)";
     } else if (money >= 100) {
-        moneyElement.style.background = "#daa520"; // 正常（深金色）
+        moneyElement.style.background = "linear-gradient(45deg, #daa520, #ff9900)";
     } else {
-        moneyElement.style.background = "#8b0000"; // 破产（暗红色）
+        moneyElement.style.background = "linear-gradient(45deg, #8b0000, #ff0000)";
     }
-            
+    }        
             // 如果 AP 为 0，提醒玩家必须结束一天
             if (actionPoints <= 0) {
                 alert("⚠️ 你的 AP 已用完！请点击 '结束一天' 按钮恢复 AP。");
