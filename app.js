@@ -7,22 +7,37 @@ let paintings = []; // 存放画作
 let actionPoints = 12; // 每天的行动点数
 let day = 1; // 记录当前天数
 
-// 获取状态显示元素
+// 确保 DOM 加载后执行
 document.addEventListener("DOMContentLoaded", function() {
     let statusElement = document.getElementById("status");
 
-    // 更新状态
+    // 更新状态 UI
     function updateStatus() {
         if (statusElement) {
             statusElement.innerText = `📅 第 ${day} 天 | ⚡ AP: ${actionPoints}/12 | 🍔 饱食度: ${hunger} | 💰 资金: $${money} | 🖼 画作: ${paintings.length}`;
-            
+
             // 如果 AP 为 0，提醒玩家必须结束一天
             if (actionPoints <= 0) {
                 alert("⚠️ 你的 AP 已用完！请点击 '结束一天' 按钮恢复 AP。");
+                disableActions(); // 禁用所有消耗 AP 的按钮
+            } else {
+                enableActions(); // 重新启用按钮
             }
         } else {
             console.error("⚠️ 无法找到 status 元素，请检查 HTML 代码！");
         }
+    }
+
+    // 禁用所有行动按钮
+    function disableActions() {
+        document.getElementById("workBtn").disabled = true;
+        document.getElementById("drawBtn").disabled = true;
+    }
+
+    // 启用所有行动按钮
+    function enableActions() {
+        document.getElementById("workBtn").disabled = false;
+        document.getElementById("drawBtn").disabled = false;
     }
 
     // 结束一天，恢复 AP
