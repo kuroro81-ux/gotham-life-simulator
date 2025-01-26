@@ -8,8 +8,38 @@ let actionPoints = 12;
 let day = 1;
 
 // **加载存档**
-loadGame();
-updateStatus();
+function loadGame() {
+    let saveData = localStorage.getItem("gothamLifeSave");
+    if (saveData) {
+        let gameState = JSON.parse(saveData);
+        hunger = gameState.hunger;
+        money = gameState.money;
+        paintings = gameState.paintings;
+        actionPoints = gameState.actionPoints;
+        day = gameState.day;
+    }
+}
+
+function saveGame() {
+    let gameState = {
+        hunger,
+        money,
+        paintings,
+        actionPoints,
+        day
+    };
+    localStorage.setItem("gothamLifeSave", JSON.stringify(gameState));
+}
+
+function resetGame() {
+    localStorage.removeItem("gothamLifeSave");
+    hunger = 100;
+    money = 100;
+    paintings = [];
+    actionPoints = 12;
+    day = 1;
+    updateStatus();
+}
 
 // **更新 UI**
 function updateStatus() {
@@ -43,15 +73,53 @@ function endDay() {
     chatWithJason();
 }
 
-// **出售画作**
-function sellPainting() {
-    if (paintings.length === 0) {
-        document.getElementById("jasonDialogue").innerText = "你没有画作可以出售。";
-        return;
-    }
-    let painting = paintings.shift();
-    money += painting.value;
-    document.getElementById("jasonDialogue").innerText = `你卖出了一幅画，获得 $${painting.value}`;
+// **随机事件系统**
+function randomEvent() {
+    let events = [
+        {
+            text: "你在回家的路上被陌生人拦住，他似乎需要帮助。",
+            effect: () => {
+                let choice = confirm("你要帮助他吗？");
+                if (choice) {
+                    document.getElementById("jasonDialogue").innerText = "你帮助了陌生人，他给了你 $20 作为感谢。";
+                    money += 20;
+                } else {
+                    document.getElementById("jasonDialogue").innerText = "你无视了陌生人，快速离开了。";
+                }
+            }
+        },
+        {
+            text: "你遇到了一个正在涂鸦的孩子，他似乎很喜欢艺术。",
+            effect: () => {
+                document.getElementById("jasonDialogue").innerText = "你和孩子聊了一会儿，心情变好了。";
+                actionPoints += 1;
+            }
+        },
+        {
+            text: "你在街上被一个小偷盯上了！",
+            effect: () => {
+                let loss = Math.floor(Math.random() * 20) + 10;
+                document.getElementById("jasonDialogue").innerText = `小偷抢走了 $${loss}！`;
+                money -= loss;
+            }
+        },
+        {
+            text: "你在垃圾桶里发现了一些剩饭。",
+            effect: () => {
+                let choice = confirm("你要吃掉它吗？");
+                if (choice) {
+                    hunger += 10;
+                    document.getElementById("jasonDialogue").innerText = "你吃了剩饭，恢复了一些饱食度。";
+                } else {
+                    document.getElementById("jasonDialogue").innerText = "你选择不吃，继续前进。";
+                }
+            }
+        }
+    ];
+
+    let event = events[Math.floor(Math.random() * events.length)];
+    document.getElementById("jasonDialogue").innerText = event.text;
+    event.effect();
     updateStatus();
 }
 
@@ -89,52 +157,31 @@ function chatWithJason() {
                     document.getElementById("jasonDialogue").innerText = "杰森耸耸肩：“也许你以后会有答案。”";
                 }
             }
+        },
+        {
+            text: "杰森：有时候，我在想如果布鲁斯还在……",
+            effect: () => {
+                document.getElementById("jasonDialogue").innerText = "你注意到杰森的眼神变得深邃，似乎陷入了回忆。";
+                actionPoints += 1;
+            }
+        },
+        {
+            text: "杰森：如果你需要钱，可以告诉我。",
+            effect: () => {
+                let choice = confirm("你要接受他的帮助吗？");
+                if (choice) {
+                    money += 50;
+                    document.getElementById("jasonDialogue").innerText = "杰森递给你一些现金：“拿着，别问。”";
+                } else {
+                    document.getElementById("jasonDialogue").innerText = "你摇了摇头，杰森叹了口气。";
+                }
+            }
         }
     ];
 
     let dialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
     document.getElementById("jasonDialogue").innerText = dialogue.text;
     dialogue.effect();
-    updateStatus();
-}
-
-// **吃饭**
-function eat() {
-    if (money < 10) {
-        document.getElementById("jasonDialogue").innerText = "你没有足够的钱吃饭。";
-        return;
-    }
-    money -= 10;
-    hunger += 20;
-    document.getElementById("jasonDialogue").innerText = "你吃了一顿饭，恢复了体力。";
-    updateStatus();
-}
-
-// **工作**
-function work() {
-    if (actionPoints < 3) {
-        document.getElementById("jasonDialogue").innerText = "你太累了，无法工作。";
-        return;
-    }
-    actionPoints -= 3;
-    hunger -= 10;
-    money += 30;
-    document.getElementById("jasonDialogue").innerText = "你努力了一天，赚了一些钱。";
-    updateStatus();
-}
-
-// **画画**
-function draw() {
-    if (actionPoints < 2) {
-        document.getElementById("jasonDialogue").innerText = "你没有足够的精力作画。";
-        return;
-    }
-    actionPoints -= 2;
-    hunger -= 10;
-    let quality = Math.floor(Math.random() * 100) + 1;
-    let value = quality * 2;
-    paintings.push({ quality: quality, value: value });
-    document.getElementById("jasonDialogue").innerText = `你完成了一幅画，质量：${quality}，价值：$${value}`;
     updateStatus();
 }
 
@@ -146,4 +193,5 @@ window.sellPainting = sellPainting;
 window.endDay = endDay;
 
 // **初始化状态**
+loadGame();
 updateStatus();
