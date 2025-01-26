@@ -1,50 +1,87 @@
-/* 🌟 全局样式 */
+/* 🌙 赛博朋克黑暗主题 */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #1e1e1e;
-    color: white;
+    background-color: #0d0d0d; /* 深色背景 */
+    color: #f4f4f4; /* 亮白文本 */
     text-align: center;
     padding: 20px;
 }
 
-/* 🌟 标题样式 */
+/* 🌟 霓虹风格标题 */
 h1 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+    color: #ff77ff; /* 霓虹粉 */
+    text-shadow: 0 0 8px #ff44ff, 0 0 16px #ff22ff; /* 发光效果 */
 }
 
-/* 🌟 状态栏样式 */
+/* 🌟 状态栏 */
 #status {
     font-size: 18px;
     padding: 10px;
     border-radius: 10px;
-    background: #333;
+    background: rgba(50, 50, 50, 0.8);
     display: inline-block;
     margin-top: 10px;
+    color: #fff;
+    text-shadow: 0 0 6px #ffffff;
 }
 
-/* 🌟 按钮基础样式 */
+/* 🌟 信息框：圆角 & 透明度 */
+.info-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.info-box {
+    background: rgba(255, 255, 255, 0.1); /* 半透明效果 */
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* 🌟 状态动态颜色 */
+.hunger-display {
+    color: white;
+    background: linear-gradient(45deg, #ff0000, #ff7700);
+}
+
+.money-display {
+    color: white;
+    background: linear-gradient(45deg, #ffd700, #ff8800);
+}
+
+.paintings-count {
+    color: white;
+    background: linear-gradient(45deg, #00ff99, #0099ff);
+}
+
+/* 🌟 霓虹风格按钮 */
 button {
-    background: linear-gradient(135deg, #ff8c00, #ff4500);
+    background: linear-gradient(135deg, #ff44ff, #ff0088);
     color: white;
     font-size: 16px;
-    padding: 12px 20px;
+    padding: 14px 24px;
     border: none;
-    border-radius: 8px;
-    margin: 8px;
+    border-radius: 10px;
+    margin: 10px;
     cursor: pointer;
-    transition: transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+    transition: all 0.2s ease-in-out;
 }
 
-/* 🖱 按钮悬浮效果 */
+/* 🖱 按钮悬浮动画 */
 button:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 4px 8px rgba(255, 140, 0, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 0 14px rgba(255, 0, 255, 0.8);
 }
 
-/* ⏺ 按钮点击反馈 */
+/* 🖲 按钮点击反馈 */
 button:active {
     transform: scale(0.95);
 }
@@ -54,37 +91,4 @@ button:disabled {
     background: gray;
     cursor: not-allowed;
     opacity: 0.5;
-}
-
-/* 🌟 游戏信息 */
-.info-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    font-size: 18px;
-    margin-top: 15px;
-}
-
-/* 🎨 画作数量 UI */
-.paintings-count {
-    background: #2e8b57;
-    padding: 5px 15px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-/* 💰 金钱 UI */
-.money-display {
-    background: #daa520;
-    padding: 5px 15px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-/* 🍔 饱食度 UI */
-.hunger-display {
-    background: #ff4500;
-    padding: 5px 15px;
-    border-radius: 10px;
-    font-weight: bold;
 }
