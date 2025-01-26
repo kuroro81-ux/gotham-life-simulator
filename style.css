@@ -16,45 +16,54 @@ h1 {
     text-shadow: 0 0 6px rgba(84, 63, 75, 0.3);
 }
 
-/* 🌟 状态栏框架 */
-.status-container {
-    background: rgba(0, 0, 0, 0.6); /* 轻微透明 */
-    padding: 15px;
-    border-radius: 16px;
+/* 🌟 主要容器框架 */
+.main-container {
+    background: rgb(45, 40, 44); /* 背景颜色 */
+    padding: 20px;
+    border-radius: 20px; /* 圆角 */
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin: 15px auto;
+    gap: 15px;
     max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(45, 40, 44, 0.8);
 }
 
-/* 🌟 状态信息（去除实色背景） */
+/* 🌟 状态栏信息 */
+.status-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* 🌟 状态信息（无背景，排布紧凑） */
 .info-box {
-    background: transparent; /* 无背景 */
-    padding: 10px 20px;
-    border-radius: 12px;
+    padding: 8px 15px;
+    font-size: 16px;
     text-shadow: 0 0 5px rgba(84, 63, 75, 0.4);
 }
 
-/* 🌟 交互按钮 */
+/* 🌟 选项按钮 */
 button {
-    background: linear-gradient(135deg, rgb(45, 40, 44), rgb(46, 40, 44));
-    color: rgb(84, 63, 75);
+    background: rgb(46, 40, 44); /* 按钮颜色 */
+    color: rgb(183, 96, 138); /* 字体颜色 */
     font-size: 16px;
-    padding: 14px 24px;
+    padding: 12px 20px;
     border: none;
     border-radius: 10px;
-    margin: 10px;
+    width: 80%;
     cursor: pointer;
-    box-shadow: 0 0 6px rgba(84, 63, 75, 0.4);
+    box-shadow: 0 0 6px rgba(183, 96, 138, 0.4);
     transition: all 0.2s ease-in-out;
 }
 
 /* 🖱 按钮悬浮效果 */
 button:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(84, 63, 75, 0.6);
+    box-shadow: 0 0 12px rgba(183, 96, 138, 0.6);
 }
 
 /* 🖲 按钮点击反馈 */
@@ -67,4 +76,14 @@ button:disabled {
     background: rgb(30, 30, 30);
     cursor: not-allowed;
     opacity: 0.5;
+}
+
+/* 🌟 选项排布紧凑 */
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    padding: 10px 0;
 }
