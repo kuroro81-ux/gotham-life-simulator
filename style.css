@@ -40,7 +40,7 @@ body {
     padding: 10px 0;
 }
 
-/* 取消按钮加粗 */
+/* 按钮 */
 button {
     background: none;
     border: 1px solid rgb(183, 96, 138);
@@ -54,7 +54,6 @@ button {
     width: 80%;
 }
 
-/* 取消加粗 */
 button:hover {
     background-color: rgba(183, 96, 138, 0.2);
 }
@@ -87,4 +86,31 @@ button:hover {
     color: rgb(210, 180, 200);
     font-size: 14px;
     box-shadow: 0 0 5px rgba(183, 96, 138, 0.6);
+}
+
+/* 自定义分割线 */
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    margin: 20px auto;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 横线 */
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background-color: white;
+    margin: 10px;
+}
+
+/* 蝴蝶结符号 */
+.divider span {
+    white-space: nowrap;
 }
