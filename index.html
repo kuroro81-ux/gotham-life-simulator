@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>哥谭生活模拟器</title>
     <link rel="stylesheet" href="./style.css">
-    <link rel="manifest" href="./manifest.json">
-    <script src="./app.js" defer></script> <!-- 确保 JavaScript 在 HTML 加载后执行 -->
+    <script src="./app.js" defer></script>
 </head>
 <body>
     <h1>欢迎来到哥谭</h1>
     <p>艾琳·凯瑟琳的生存挑战开始！</p>
+
+    <!-- 状态信息 -->
+    <div class="info-container">
+        <span class="status-day">📅 第 <span id="day">1</span> 天</span>
+        <span class="status-ap">⚡ AP: <span id="ap">12</span>/12</span>
+        <span class="hunger-display">🍔 饱食度: <span id="hunger">100</span></span>
+        <span class="money-display">💰 资金: $<span id="money">100</span></span>
+        <span class="paintings-count">🖼 画作: <span id="paintings">0</span></span>
+    </div>
 
     <!-- 交互按钮 -->
     <button id="eatBtn" onclick="eat()">吃饭（+20饱食度）</button>
@@ -19,16 +27,6 @@
     <button id="sellBtn" onclick="sellPainting()">出售画作</button>
     <button id="endDayBtn" onclick="endDay()">结束一天（恢复 AP）</button>
 
-    <!-- 显示状态信息 -->
     <p id="status">状态加载中...</p>
-
-    <!-- 确保 PWA 能正常运行 -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./service-worker.js').then(() => {
-                console.log('✅ Service Worker Registered');
-            });
-        }
-    </script>
 </body>
 </html>
