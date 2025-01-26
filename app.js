@@ -49,13 +49,12 @@ function updateStatus() {
     document.getElementById("money").innerText = money;
     document.getElementById("paintings").innerText = paintings.length;
 
-    // **饱食度为 0 时游戏结束**
     if (hunger <= 0) {
         alert("你因饥饿过度晕倒了，游戏结束。");
         resetGame();
     }
 
-    saveGame(); // **自动保存进度**
+    saveGame();
 }
 
 // **结束一天**
@@ -75,108 +74,44 @@ function endDay() {
     document.getElementById("jasonDialogue").innerText = jasonText;
 }
 
-// **随机事件系统**
+// **随机事件**
 function randomEvent() {
     let events = [
-        {
-            text: "你在回家的路上被陌生人拦住，他似乎需要帮助。",
-            effect: () => {
-                let choice = confirm("你要帮助他吗？");
-                if (choice) {
-                    money += 20;
-                    return "你帮助了陌生人，他给了你 $20 作为感谢。";
-                } else {
-                    return "你无视了陌生人，快速离开了。";
-                }
-            }
-        },
-        {
-            text: "你遇到了一个正在涂鸦的孩子，他似乎很喜欢艺术。",
-            effect: () => {
-                actionPoints += 1;
-                return "你和孩子聊了一会儿，心情变好了（+1 AP）。";
-            }
-        },
-        {
-            text: "你在街上被一个小偷盯上了！",
-            effect: () => {
-                let loss = Math.floor(Math.random() * 20) + 10;
-                money -= loss;
-                return `小偷抢走了 $${loss}！`;
-            }
-        },
-        {
-            text: "你在垃圾桶里发现了一些剩饭。",
-            effect: () => {
-                let choice = confirm("你要吃掉它吗？");
-                if (choice) {
-                    hunger += 10;
-                    return "你吃了剩饭，恢复了一些饱食度。";
-                } else {
-                    return "你选择不吃，继续前进。";
-                }
-            }
-        }
+        "你在街上看到了一只流浪猫，它对你喵喵叫。",
+        "一个神秘的黑衣人给了你一张纸条，上面写着“离开哥谭”。",
+        "你踩到了一张百元大钞，幸运的是没人看到。",
+        "你听到远处传来枪声，但没人注意到。",
+        "你在路上撞到了一个熟人，他给了你一点钱。",
+        "街角的电视机正在播放有关红头罩的新闻。"
     ];
-
-    let event = events[Math.floor(Math.random() * events.length)];
-    return event.effect();
+    return events[Math.floor(Math.random() * events.length)];
 }
 
-// **扩展杰森的随机对话**
+// **杰森的随机对话**
 function chatWithJason() {
     let dialogues = [
-        {
-            text: "杰森：哥谭的街头永远不安全。",
-            effect: () => {
-                hunger -= 5;
-                return "你感到一阵不安，警惕地环顾四周。";
-            }
-        },
-        {
-            text: "杰森：今天遇到了迪克，我们聊了聊。",
-            effect: () => {
-                money += 10;
-                return "迪克似乎给了杰森一点钱，你意外地分到了一些。";
-            }
-        },
-        {
-            text: "杰森：如果有一天，你会选择离开哥谭吗？",
-            effect: () => {
-                actionPoints += 1;
-                return "你陷入沉思，似乎有些犹豫。";
-            }
-        },
-        {
-            text: "杰森：你应该更注意自己的安全。",
-            effect: () => {
-                hunger += 5;
-                return "你感觉自己受到了照顾。";
-            }
-        },
-        {
-            text: "杰森：哥谭是个没有英雄的地方。",
-            effect: () => {
-                money -= 10;
-                return "杰森的话让你感到一丝沉重。";
-            }
-        },
-        {
-            text: "杰森：红头罩这个名字，你怎么看？",
-            effect: () => {
-                let choice = confirm("你要回答他吗？");
-                if (choice) {
-                    actionPoints += 2;
-                    return "杰森沉默了一会儿，点了点头。";
-                } else {
-                    return "杰森耸耸肩：“也许你以后会有答案。”";
-                }
-            }
-        }
+        "杰森：哥谭的街头永远不安全。",
+        "杰森：今天遇到了迪克，我们聊了聊。",
+        "杰森：如果有一天，你会选择离开哥谭吗？",
+        "杰森：你应该更注意自己的安全。",
+        "杰森：哥谭是个没有英雄的地方。",
+        "杰森：我最近有些麻烦，但不想让你担心。",
+        "杰森：红头罩这个名字，你怎么看？",
+        "杰森：有时候，我在想如果布鲁斯还在……"
     ];
+    return dialogues[Math.floor(Math.random() * dialogues.length)];
+}
 
-    let dialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
-    return dialogue.effect();
+// **出售画作**
+function sellPainting() {
+    if (paintings.length === 0) {
+        document.getElementById("jasonDialogue").innerText = "你没有画作可以出售。";
+        return;
+    }
+    let painting = paintings.shift();
+    money += painting.value;
+    document.getElementById("jasonDialogue").innerText = `你卖出了一幅画，获得 $${painting.value}`;
+    updateStatus();
 }
 
 // **绑定按钮**
