@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>哥谭生活模拟器</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
-    <script src="js/app.js" defer></script>
+    <script src="js/app.js" defer></script> <!-- 确保这里正确加载 app.js -->
 </head>
 <body>
     <h1>欢迎来到哥谭</h1>
     <p>艾琳·凯瑟琳的生存挑战开始！</p>
+
+    <!-- 交互按钮 -->
     <button onclick="eat()">吃饭（+20饱食度）</button>
     <button onclick="work()">找工作</button>
     <button onclick="draw()">画画</button>
-    <button onclick="sellPainting()">出售画作</button>
-    <p id="status"></p>
+    <button onclick="sellPainting()">出售画作</button> <!-- 新增按钮 -->
 
+    <!-- 显示状态 -->
+    <p id="status">状态加载中...</p>
+
+    <!-- 注册 Service Worker 以支持 PWA -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js').then(() => {
