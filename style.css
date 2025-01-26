@@ -1,24 +1,24 @@
-/* 🌙 赛博朋克黑暗主题 */
+/* 🌙 黑暗主题 */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #0d0d0d; /* 深色背景 */
-    color: #f4f4f4; /* 亮白文本 */
+    background-color: #000000; /* 纯黑背景 */
+    color: rgb(84, 63, 75); /* 统一字体颜色 */
     text-align: center;
     padding: 20px;
 }
 
-/* 🌟 标题：带霓虹效果 */
+/* 🌟 标题样式 */
 h1 {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #ff99ff; /* 柔和粉色 */
-    text-shadow: 0 0 8px #ff66ff, 0 0 16px #ff33ff;
+    color: rgb(84, 63, 75);
+    text-shadow: 0 0 6px rgba(84, 63, 75, 0.3);
 }
 
-/* 🌟 让状态栏统一放进一个框 */
+/* 🌟 状态栏框架 */
 .status-container {
-    background: rgba(255, 255, 255, 0.08); /* 轻微透明 */
+    background: rgba(0, 0, 0, 0.6); /* 轻微透明 */
     padding: 15px;
     border-radius: 16px;
     display: flex;
@@ -29,58 +29,42 @@ h1 {
     max-width: 600px;
 }
 
-/* 🌟 状态框 */
+/* 🌟 状态信息（去除实色背景） */
 .info-box {
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent; /* 无背景 */
     padding: 10px 20px;
     border-radius: 12px;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 0 5px rgba(84, 63, 75, 0.4);
 }
 
-/* 🌟 状态栏颜色调整（更柔和） */
-.hunger-display {
-    color: white;
-    background: linear-gradient(45deg, #ff5555, #ff9966); /* 低饱和粉 */
-}
-
-.money-display {
-    color: white;
-    background: linear-gradient(45deg, #ffcc66, #ff9966);
-}
-
-.paintings-count {
-    color: white;
-    background: linear-gradient(45deg, #66ffcc, #33ccff);
-}
-
-/* 🌟 按钮：淡粉色霓虹 */
+/* 🌟 交互按钮 */
 button {
-    background: linear-gradient(135deg, #ff99cc, #ff66aa);
-    color: white;
+    background: linear-gradient(135deg, rgb(45, 40, 44), rgb(46, 40, 44));
+    color: rgb(84, 63, 75);
     font-size: 16px;
     padding: 14px 24px;
     border: none;
     border-radius: 10px;
     margin: 10px;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(255, 102, 204, 0.5);
+    box-shadow: 0 0 6px rgba(84, 63, 75, 0.4);
     transition: all 0.2s ease-in-out;
 }
 
-/* 🖱 悬浮效果 */
+/* 🖱 按钮悬浮效果 */
 button:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 14px rgba(255, 102, 204, 0.8);
+    box-shadow: 0 0 12px rgba(84, 63, 75, 0.6);
 }
 
-/* 🖲 点击反馈 */
+/* 🖲 按钮点击反馈 */
 button:active {
     transform: scale(0.95);
 }
 
 /* ❌ 禁用按钮 */
 button:disabled {
-    background: gray;
+    background: rgb(30, 30, 30);
     cursor: not-allowed;
     opacity: 0.5;
 }
