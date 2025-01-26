@@ -7,63 +7,55 @@ body {
     padding: 20px;
 }
 
-/* 🌟 霓虹风格标题 */
+/* 🌟 标题：带霓虹效果 */
 h1 {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #ff77ff; /* 霓虹粉 */
-    text-shadow: 0 0 8px #ff44ff, 0 0 16px #ff22ff; /* 发光效果 */
+    color: #ff99ff; /* 柔和粉色 */
+    text-shadow: 0 0 8px #ff66ff, 0 0 16px #ff33ff;
 }
 
-/* 🌟 状态栏 */
-#status {
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 10px;
-    background: rgba(50, 50, 50, 0.8);
-    display: inline-block;
-    margin-top: 10px;
-    color: #fff;
-    text-shadow: 0 0 6px #ffffff;
-}
-
-/* 🌟 信息框：圆角 & 透明度 */
-.info-container {
+/* 🌟 让状态栏统一放进一个框 */
+.status-container {
+    background: rgba(255, 255, 255, 0.08); /* 轻微透明 */
+    padding: 15px;
+    border-radius: 16px;
     display: flex;
     justify-content: center;
     gap: 20px;
-    font-size: 18px;
-    margin-top: 15px;
+    flex-wrap: wrap;
+    margin: 15px auto;
+    max-width: 600px;
 }
 
+/* 🌟 状态框 */
 .info-box {
-    background: rgba(255, 255, 255, 0.1); /* 半透明效果 */
+    background: rgba(255, 255, 255, 0.1);
     padding: 10px 20px;
     border-radius: 12px;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
-/* 🌟 状态动态颜色 */
+/* 🌟 状态栏颜色调整（更柔和） */
 .hunger-display {
     color: white;
-    background: linear-gradient(45deg, #ff0000, #ff7700);
+    background: linear-gradient(45deg, #ff5555, #ff9966); /* 低饱和粉 */
 }
 
 .money-display {
     color: white;
-    background: linear-gradient(45deg, #ffd700, #ff8800);
+    background: linear-gradient(45deg, #ffcc66, #ff9966);
 }
 
 .paintings-count {
     color: white;
-    background: linear-gradient(45deg, #00ff99, #0099ff);
+    background: linear-gradient(45deg, #66ffcc, #33ccff);
 }
 
-/* 🌟 霓虹风格按钮 */
+/* 🌟 按钮：淡粉色霓虹 */
 button {
-    background: linear-gradient(135deg, #ff44ff, #ff0088);
+    background: linear-gradient(135deg, #ff99cc, #ff66aa);
     color: white;
     font-size: 16px;
     padding: 14px 24px;
@@ -71,17 +63,17 @@ button {
     border-radius: 10px;
     margin: 10px;
     cursor: pointer;
-    box-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 102, 204, 0.5);
     transition: all 0.2s ease-in-out;
 }
 
-/* 🖱 按钮悬浮动画 */
+/* 🖱 悬浮效果 */
 button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 14px rgba(255, 0, 255, 0.8);
+    transform: scale(1.05);
+    box-shadow: 0 0 14px rgba(255, 102, 204, 0.8);
 }
 
-/* 🖲 按钮点击反馈 */
+/* 🖲 点击反馈 */
 button:active {
     transform: scale(0.95);
 }
