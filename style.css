@@ -39,48 +39,40 @@ h1 {
     padding: 10px 0;
 }
 
-/* 🌟 选项大框 */
+/* 🌟 选项去掉所有框，仅保留文本 */
 .button-container {
-    background: rgb(45, 40, 44);
-    padding: 15px;
-    border-radius: 15px;
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    width: 90%;
-    gap: 10px;
-    box-shadow: 0 0 8px rgba(84, 63, 75, 0.6);
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 0;
 }
 
-/* 🌟 选项按钮 */
+/* 🌟 选项文本 */
 button {
-    background: rgb(46, 40, 44); /* 按钮颜色 */
-    color: rgb(183, 96, 138); /* 字体颜色 */
-    font-size: 16px;
-    padding: 12px 20px;
+    background: none; /* 无背景 */
     border: none;
-    border-radius: 10px;
-    width: 30%;
+    color: rgb(183, 96, 138); /* 文字颜色 */
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 6px rgba(183, 96, 138, 0.4);
-    transition: all 0.2s ease-in-out;
     text-align: center;
+    transition: all 0.2s ease-in-out;
 }
 
-/* 🖱 按钮悬浮效果 */
+/* 🖱 文字悬浮效果 */
 button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(183, 96, 138, 0.6);
+    text-shadow: 0 0 8px rgba(183, 96, 138, 0.6);
 }
 
-/* 🖲 按钮点击反馈 */
+/* 🖲 文字点击反馈 */
 button:active {
-    transform: scale(0.95);
+    opacity: 0.8;
 }
 
 /* ❌ 禁用按钮 */
 button:disabled {
-    background: rgb(30, 30, 30);
+    color: rgba(183, 96, 138, 0.5);
     cursor: not-allowed;
-    opacity: 0.5;
 }
