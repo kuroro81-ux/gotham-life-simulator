@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("hunger").innerText = hunger;
         document.getElementById("money").innerText = money;
         document.getElementById("paintings").innerText = paintings.length;
-
         console.log("✅ 状态已更新");
     }
 
@@ -37,18 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 effect: () => {
                     alert("📉 经济危机来袭！画作价值下降！");
                     paintings.forEach(p => p.value = Math.floor(p.value * 0.7)); // 所有画作价值-30%
-                }
-            },
-            { 
-                name: "🏛 画廊经理拜访", 
-                effect: () => {
-                    if (paintings.length >= 2) {
-                        alert("🏛 画廊经理看中你的作品，愿意高价收购！");
-                        money += paintings.length * 60; // 每幅画卖$60
-                        paintings = [];
-                    } else {
-                        alert("🏛 画廊经理来了，但你画作太少...");
-                    }
                 }
             },
             { 
@@ -96,18 +83,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 触发随机事件
         randomEvent();
+
+        // 触发与杰森的对话
+        chatWithJason();
+
         updateStatus();
     }
 
-    // **行动函数**
-    function consumeAP(amount) {
-        if (actionPoints < amount) {
-            alert("⚠️ 你的 AP 不足，必须结束一天才能恢复！");
-            return false;
-        }
-        actionPoints -= amount;
-        updateStatus();
-        return true;
+    // **与杰森的对话系统**
+    function chatWithJason() {
+        let dialogues = [
+            {
+                text: "🖤 杰森靠在窗边，点燃了一根烟，语气平静：“今天过得怎么样？”",
+                effect: () => alert("💭 你和杰森聊了一会儿，感觉安心了一些。")
+            },
+            {
+                text: "🔥 杰森低头擦拭着他的枪，眼神有些犹豫：“如果有一天，我不得不离开……你会怎么办？”",
+                effect: () => {
+                    let choice = confirm("💬 你要安慰他吗？");
+                    if (choice) {
+                        alert("💖 你握住了杰森的手，他笑了笑：“我不会真的走。”");
+                    } else {
+                        alert("💀 杰森沉默了一会儿，没有再继续这个话题。");
+                    }
+                }
+            },
+            {
+                text: "🏍 杰森擦拭着他的摩托车，眼神有些怀念：“哥谭的街道……你知道这里曾经发生过什么吗？”",
+                effect: () => {
+                    alert("🏙 他向你讲述了哥谭最黑暗的时期——无政府时期、黑帮横行的夜晚。");
+                }
+            },
+            {
+                text: "🩸 “你听过红头罩的故事吗？”杰森的声音低沉。",
+                effect: () => {
+                    let choice = confirm("💬 你要让他继续讲下去吗？");
+                    if (choice) {
+                        alert("📖 你听着他的故事，关于一个被命运玩弄的少年，关于一场改变一切的悲剧。");
+                    } else {
+                        alert("🚬 杰森叹了口气：“或许有一天你会想听。”");
+                    }
+                }
+            }
+        ];
+
+        let dialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
+        alert(`📢 与杰森的对话：\n${dialogue.text}`);
+        dialogue.effect();
     }
 
     // **吃饭（扣除金钱 $10，增加 20 饱食度）**
@@ -124,7 +146,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // **找工作（消耗 3 AP，赚取 $30，减少 10 饱食度）**
     function work() {
-        if (!consumeAP(3)) return;
+        if (actionPoints < 3) {
+            alert("⚠️ 你的 AP 不足！");
+            return;
+        }
+        actionPoints -= 3;
         hunger -= 10;
         money += 30;
         alert("💰 你工作了一天，赚了 $30！");
@@ -133,24 +159,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // **画画（消耗 2 AP，消耗 10 饱食度，新增一幅画）**
     function draw() {
-        if (!consumeAP(2)) return;
+        if (actionPoints < 2) {
+            alert("⚠️ 你的 AP 不足！");
+            return;
+        }
+        actionPoints -= 2;
         hunger -= 10;
         let quality = Math.floor(Math.random() * 100) + 1;
         let value = quality * 2;
-        paintings.push({ id: paintings.length + 1, quality: quality, value: value });
+        paintings.push({ quality: quality, value: value });
         alert(`🖌 你画了一幅画！\n🎨 质量: ${quality}  💲价值: $${value}`);
-        updateStatus();
-    }
-
-    // **出售画作（获得金钱）**
-    function sellPainting() {
-        if (paintings.length === 0) {
-            alert("⚠️ 你没有画可以卖！");
-            return;
-        }
-        let painting = paintings.shift();
-        money += painting.value;
-        alert(`✅ 你卖掉了一幅画，赚了 $${painting.value}`);
         updateStatus();
     }
 
@@ -158,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.eat = eat;
     window.work = work;
     window.draw = draw;
-    window.sellPainting = sellPainting;
     window.endDay = endDay;
 
     // **初始化状态**
