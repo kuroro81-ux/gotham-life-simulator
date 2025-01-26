@@ -2,7 +2,7 @@
 body {
     font-family: 'Arial', sans-serif;
     background-color: #000000;
-    color: rgb(84, 63, 75);
+    color: rgb(200, 180, 190);
     text-align: center;
     padding: 20px;
 }
@@ -19,7 +19,7 @@ body {
     gap: 15px;
     max-width: 600px;
     margin: 20px auto;
-    box-shadow: 0 0 10px rgba(45, 40, 44, 0.8);
+    box-shadow: 0 0 10px rgba(183, 96, 138, 0.8);
 }
 
 /* 状态栏 */
@@ -74,4 +74,17 @@ button:hover {
 #jasonDialogue {
     color: rgb(183, 96, 138);
     font-size: 16px;
+}
+
+/* 事件日志 */
+.event-log {
+    background: rgb(30, 25, 28);
+    padding: 10px;
+    border-radius: 10px;
+    width: 90%;
+    text-align: center;
+    margin-top: 15px;
+    color: rgb(210, 180, 200);
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(183, 96, 138, 0.6);
 }
