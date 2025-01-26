@@ -7,15 +7,15 @@ let paintings = []; // 存放画作
 let actionPoints = 12; // 每天的行动点数
 let day = 1; // 记录当前天数
 
-// 确保 DOM 加载后执行
+// **等待 HTML 载入后执行**
 document.addEventListener("DOMContentLoaded", function() {
     let statusElement = document.getElementById("status");
 
-    // 更新状态 UI
+    // **更新状态 UI**
     function updateStatus() {
         if (statusElement) {
             statusElement.innerText = `📅 第 ${day} 天 | ⚡ AP: ${actionPoints}/12 | 🍔 饱食度: ${hunger} | 💰 资金: $${money} | 🖼 画作: ${paintings.length}`;
-
+            
             // 如果 AP 为 0，提醒玩家必须结束一天
             if (actionPoints <= 0) {
                 alert("⚠️ 你的 AP 已用完！请点击 '结束一天' 按钮恢复 AP。");
@@ -28,19 +28,19 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // 禁用所有行动按钮
+    // **禁用所有需要 AP 的按钮**
     function disableActions() {
         document.getElementById("workBtn").disabled = true;
         document.getElementById("drawBtn").disabled = true;
     }
 
-    // 启用所有行动按钮
+    // **启用所有按钮**
     function enableActions() {
         document.getElementById("workBtn").disabled = false;
         document.getElementById("drawBtn").disabled = false;
     }
 
-    // 结束一天，恢复 AP
+    // **结束一天，恢复 AP**
     function endDay() {
         actionPoints = 12;
         day += 1;
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
         updateStatus();
     }
 
-    // 消耗 AP 的通用函数
+    // **消耗 AP 的通用函数**
     function consumeAP(amount) {
         if (actionPoints < amount) {
             alert("⚠️ 你的 AP 不足，必须结束一天才能恢复！");
@@ -61,18 +61,18 @@ document.addEventListener("DOMContentLoaded", function() {
         return true;
     }
 
-    // 吃饭（不消耗 AP）
+    // **吃饭（不消耗 AP）**
     function eat() {
         console.log("🍽 吃饭按钮被点击");
         hunger += 20;
         updateStatus();
     }
 
-    // 找工作（消耗 3 AP）
+    // **找工作（消耗 3 AP）**
     function work() {
         console.log("💼 找工作按钮被点击");
 
-        if (!consumeAP(3)) return; // 如果 AP 不足，则不执行后续代码
+        if (!consumeAP(3)) return;
 
         hunger -= 10;
         money += 30; // 找工作赚钱
@@ -80,11 +80,11 @@ document.addEventListener("DOMContentLoaded", function() {
         updateStatus();
     }
 
-    // 画画（消耗 2 AP）
+    // **画画（消耗 2 AP）**
     function draw() {
         console.log("🎨 画画按钮被点击");
 
-        if (!consumeAP(2)) return; // 如果 AP 不足，则不执行后续代码
+        if (!consumeAP(2)) return;
 
         if (hunger <= 0) {
             alert("⚠️ 你太饿了，无法画画！");
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
         alert(`🖌 你画了一幅画！\n🎨 质量: ${quality}  💲价值: $${value}`);
     }
 
-    // 出售画作（不消耗 AP）
+    // **出售画作（不消耗 AP）**
     function sellPainting() {
         console.log("🖼 出售画作按钮被点击");
 
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // **初始化状态**
     updateStatus();
 
-    // 让 HTML 里的按钮能找到 JS 里的函数
+    // **确保 HTML 能正确调用这些函数**
     window.eat = eat;
     window.work = work;
     window.draw = draw;
