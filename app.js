@@ -1,31 +1,36 @@
+// 角色状态
 let hunger = 100;
+let money = 100;
+let paintings = []; // 存放画作
 let status = document.getElementById("status");
 
+// 更新状态显示
 function updateStatus() {
-    status.innerText = `当前饱食度: ${hunger}`;
+    if (status) {
+        status.innerText = `当前饱食度: ${hunger} | 资金: $${money} | 画作数量: ${paintings.length}`;
+    } else {
+        console.error("无法找到 status 元素，检查 HTML 代码是否有 <p id='status'></p>");
+    }
 }
 
+// 吃饭，恢复饱食度
 function eat() {
+    console.log("吃饭按钮被点击");
     hunger += 20;
     updateStatus();
 }
 
+// 找工作，消耗饱食度但不赚钱（未来可扩展）
 function work() {
+    console.log("找工作按钮被点击");
     hunger -= 10;
     updateStatus();
 }
 
+// 画画功能
 function draw() {
-    hunger -= 5;
-    updateStatus();
-}
+    console.log("画画按钮被点击");
 
-updateStatus();
-
-let paintings = []; // 存放画作
-let money = 100; // 初始资金
-
-function draw() {
     if (hunger <= 0) {
         alert("你太饿了，无法画画！");
         return;
@@ -46,7 +51,10 @@ function draw() {
     alert(`你画了一幅画！\n质量: ${quality} 价值: $${value}`);
 }
 
+// 出售画作
 function sellPainting() {
+    console.log("出售画作按钮被点击");
+
     if (paintings.length === 0) {
         alert("你没有画可以卖！");
         return;
@@ -58,7 +66,5 @@ function sellPainting() {
     alert(`你卖掉了一幅画，赚了 $${painting.value}`);
 }
 
-function updateStatus() {
-    document.getElementById("status").innerText = 
-        `当前饱食度: ${hunger} | 资金: $${money} | 画作数量: ${paintings.length}`;
-}
+// 初始状态更新
+updateStatus();
