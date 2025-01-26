@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", function() {
             // 如果 AP 为 0，提醒玩家必须结束一天
             if (actionPoints <= 0) {
                 alert("⚠️ 你的 AP 已用完！请点击 '结束一天' 按钮恢复 AP。");
-                disableActions(); // 禁用所有消耗 AP 的按钮
+                disableActions();
             } else {
-                enableActions(); // 重新启用按钮
+                enableActions();
             }
         } else {
             console.error("⚠️ 无法找到 status 元素，请检查 HTML 代码！");
@@ -40,13 +40,17 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("drawBtn").disabled = false;
     }
 
-    // **结束一天，恢复 AP**
+    // **结束一天，恢复 AP，并触发随机事件**
     function endDay() {
         actionPoints = 12;
         day += 1;
         hunger -= 20; // 过一天减少饱食度
 
         alert(`🌅 新的一天开始了！今天是第 ${day} 天。\n你的 AP 已恢复为 12。\n⚠️ 饱食度减少 20，请注意补充食物！`);
+
+        // **触发随机事件**
+        randomEvent();
+
         updateStatus();
     }
 
@@ -116,32 +120,6 @@ document.addEventListener("DOMContentLoaded", function() {
         alert(`✅ 你卖掉了一幅画，赚了 $${painting.value}`);
     }
 
-    // **初始化状态**
-    updateStatus();
-
-// **确保所有 JavaScript 代码在页面加载后执行**
-document.addEventListener("DOMContentLoaded", function() {
-    let statusElement = document.getElementById("status");
-
-    function updateStatus() {
-        if (statusElement) {
-            statusElement.innerText = `📅 第 ${day} 天 | ⚡ AP: ${actionPoints}/12 | 🍔 饱食度: ${hunger} | 💰 资金: $${money} | 🖼 画作: ${paintings.length}`;
-        }
-    }
-
-    function endDay() {
-        actionPoints = 12;
-        day += 1;
-        hunger -= 20;
-
-        alert(`🌅 新的一天开始了！今天是第 ${day} 天。\n你的 AP 已恢复为 12。\n⚠️ 饱食度减少 20，请注意补充食物！`);
-
-        // **调用随机事件**
-        randomEvent();
-
-        updateStatus();
-    }
-
     // **随机事件系统**
     function randomEvent() {
         let events = [
@@ -149,8 +127,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 name: "🎨 灵感爆发！", 
                 effect: () => {
                     alert("💡 你突发灵感！今天画作质量提升 20，但画画会多消耗 1 AP！");
-                    bonusQuality = 20; 
-                    extraApCost = 1;
                 }
             },
             { 
@@ -165,8 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 effect: () => {
                     if (paintings.length >= 3) {
                         alert("🏛 画廊经理看中了你的作品！他邀请你举办画展，提升声望！");
-                        fame += 10;
-                        paintings = [];
+                        paintings = []; // 清空画作
                     } else {
                         alert("🏛 画廊经理来了，但你没有足够的画作举办展览...");
                     }
