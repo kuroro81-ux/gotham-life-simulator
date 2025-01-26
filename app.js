@@ -119,7 +119,88 @@ document.addEventListener("DOMContentLoaded", function() {
     // **初始化状态**
     updateStatus();
 
-    // **确保 HTML 能正确调用这些函数**
+// **确保所有 JavaScript 代码在页面加载后执行**
+document.addEventListener("DOMContentLoaded", function() {
+    let statusElement = document.getElementById("status");
+
+    function updateStatus() {
+        if (statusElement) {
+            statusElement.innerText = `📅 第 ${day} 天 | ⚡ AP: ${actionPoints}/12 | 🍔 饱食度: ${hunger} | 💰 资金: $${money} | 🖼 画作: ${paintings.length}`;
+        }
+    }
+
+    function endDay() {
+        actionPoints = 12;
+        day += 1;
+        hunger -= 20;
+
+        alert(`🌅 新的一天开始了！今天是第 ${day} 天。\n你的 AP 已恢复为 12。\n⚠️ 饱食度减少 20，请注意补充食物！`);
+
+        // **调用随机事件**
+        randomEvent();
+
+        updateStatus();
+    }
+
+    // **随机事件系统**
+    function randomEvent() {
+        let events = [
+            { 
+                name: "🎨 灵感爆发！", 
+                effect: () => {
+                    alert("💡 你突发灵感！今天画作质量提升 20，但画画会多消耗 1 AP！");
+                    bonusQuality = 20; 
+                    extraApCost = 1;
+                }
+            },
+            { 
+                name: "📉 市场萧条！", 
+                effect: () => {
+                    alert("📉 经济危机来袭！所有画作的价值下降 30%！");
+                    paintings.forEach(painting => painting.value = Math.floor(painting.value * 0.7));
+                }
+            },
+            { 
+                name: "🏛 画廊经理拜访！", 
+                effect: () => {
+                    if (paintings.length >= 3) {
+                        alert("🏛 画廊经理看中了你的作品！他邀请你举办画展，提升声望！");
+                        fame += 10;
+                        paintings = [];
+                    } else {
+                        alert("🏛 画廊经理来了，但你没有足够的画作举办展览...");
+                    }
+                }
+            },
+            { 
+                name: "💰 黑市买家！", 
+                effect: () => {
+                    if (paintings.length > 0) {
+                        let risk = Math.random() < 0.2;
+                        let painting = paintings.shift();
+                        if (risk) {
+                            alert("❌ 你被骗了！黑市买家带走了一幅画，但没付钱！");
+                        } else {
+                            let highPrice = painting.value * 2;
+                            money += highPrice;
+                            alert(`💰 黑市买家高价收购了一幅画，获得 $${highPrice}！`);
+                        }
+                    } else {
+                        alert("💰 黑市买家来了，但你没有画作可卖！");
+                    }
+                }
+            }
+        ];
+
+        let event = events[Math.floor(Math.random() * events.length)];
+        alert(`📢 今日事件：${event.name}`);
+        event.effect();
+    }
+
+    // **初始化状态**
+    updateStatus();
+
+    // **确保 HTML 按钮可以调用这些函数**
     window.eat = eat;
     window.work = work;
     window.draw = draw;
