@@ -1,122 +1,92 @@
 console.log("app.js 已成功加载！");
 
 // 角色状态
-let hunger = 100; // 饱食度
-let money = 100; // 资金
-let paintings = []; // 画作库存
-let actionPoints = 12; // 每天行动点
-let day = 1; // 当前天数
+let hunger = 100;
+let money = 100;
+let paintings = [];
+let actionPoints = 12;
+let day = 1;
 
-// 更新 UI
+// **加载存档**
+loadGame();
+updateStatus();
+
+// **更新 UI**
 function updateStatus() {
     document.getElementById("day").innerText = day;
     document.getElementById("ap").innerText = actionPoints;
     document.getElementById("hunger").innerText = hunger;
     document.getElementById("money").innerText = money;
     document.getElementById("paintings").innerText = paintings.length;
+
+    // **饱食度为 0 时游戏结束**
+    if (hunger <= 0) {
+        alert("你因饥饿过度晕倒了，游戏结束。");
+        resetGame();
+    }
+
+    saveGame(); // **自动保存进度**
 }
 
-// 结束一天
+// **结束一天**
 function endDay() {
     actionPoints = 12;
     day += 1;
-    hunger -= 20; // 过一天减少饱食度
+    hunger -= 20;
 
     updateStatus();
 
-    // 触发随机事件
+    // **触发随机事件**
     randomEvent();
 
-    // 触发与杰森的对话
+    // **触发杰森对话**
     chatWithJason();
 }
 
-// 随机事件
-function randomEvent() {
-    let events = [
-        { name: "灵感爆发", effect: () => paintings.forEach(p => p.quality += 10) },
-        { name: "市场萧条", effect: () => paintings.forEach(p => p.value *= 0.7) },
-        { name: "黑市买家", effect: () => money += 50 },
-        { name: "体力透支", effect: () => actionPoints = Math.max(0, actionPoints - 3) }
-    ];
-
-    let event = events[Math.floor(Math.random() * events.length)];
-    document.getElementById("jasonDialogue").innerText = `今日事件：${event.name}`;
-    event.effect();
+// **出售画作**
+function sellPainting() {
+    if (paintings.length === 0) {
+        document.getElementById("jasonDialogue").innerText = "你没有画作可以出售。";
+        return;
+    }
+    let painting = paintings.shift();
+    money += painting.value;
+    document.getElementById("jasonDialogue").innerText = `你卖出了一幅画，获得 $${painting.value}`;
+    updateStatus();
 }
 
-// 与杰森的对话系统
+// **扩展杰森的随机对话**
 function chatWithJason() {
     let dialogues = [
         {
-            text: "杰森：今天过得怎么样？",
-            effect: () => hunger += 5
-        },
-        {
-            text: "杰森：如果有一天，我不得不离开……你会怎么办？",
-            effect: () => {
-                let choice = confirm("你要安慰他吗？");
-                if (choice) {
-                    document.getElementById("jasonDialogue").innerText = "你握住了杰森的手，他轻笑了一下。";
-                    actionPoints += 2;
-                } else {
-                    document.getElementById("jasonDialogue").innerText = "杰森沉默了，没有再继续这个话题。";
-                }
-            }
-        },
-        {
-            text: "杰森：哥谭的夜晚总是这么冷。",
-            effect: () => actionPoints += 1
-        },
-        {
-            text: "杰森：你知道吗？以前的我不喜欢用枪。",
-            effect: () => money += 10
-        },
-        {
-            text: "杰森：你听过红头罩的故事吗？",
-            effect: () => {
-                let choice = confirm("你要让他继续讲下去吗？");
-                if (choice) {
-                    document.getElementById("jasonDialogue").innerText = "你听着他的故事，关于一个被命运玩弄的少年。";
-                    actionPoints -= 2;
-                } else {
-                    document.getElementById("jasonDialogue").innerText = "杰森叹了口气：“或许有一天你会想听。”";
-                }
-            }
-        },
-        {
-            text: "杰森：哥谭有时候让人喘不过气。",
+            text: "杰森：哥谭的街头永远不安全。",
             effect: () => hunger -= 5
         },
         {
-            text: "杰森：今天遇到迪克了，他还是那么烦。",
-            effect: () => money += 5
+            text: "杰森：今天遇到了迪克，我们聊了聊。",
+            effect: () => money += 10
         },
         {
-            text: "杰森：我总觉得有人在跟踪我。",
-            effect: () => {
-                let choice = confirm("你要让他调查吗？");
-                if (choice) {
-                    document.getElementById("jasonDialogue").innerText = "杰森点点头：“好，我会留意的。”";
-                    actionPoints -= 1;
-                } else {
-                    document.getElementById("jasonDialogue").innerText = "你选择保持沉默。";
-                }
-            }
-        },
-        {
-            text: "杰森：如果你有机会离开哥谭，你会走吗？",
+            text: "杰森：如果有一天，你会选择离开哥谭吗？",
             effect: () => actionPoints += 1
         },
         {
-            text: "杰森：今天听到了一些地下交易的消息。",
+            text: "杰森：你应该更注意自己的安全。",
+            effect: () => hunger += 5
+        },
+        {
+            text: "杰森：哥谭是个没有英雄的地方。",
+            effect: () => money -= 10
+        },
+        {
+            text: "杰森：红头罩这个名字，你怎么看？",
             effect: () => {
-                let choice = confirm("你要让他去看看吗？");
+                let choice = confirm("你要回答他吗？");
                 if (choice) {
-                    document.getElementById("jasonDialogue").innerText = "杰森消失了一段时间，回来时带着一笔意外之财。";
-                    money += 30;
+                    document.getElementById("jasonDialogue").innerText = "杰森沉默了一会儿，点了点头。";
+                    actionPoints += 2;
                 } else {
-                    document.getElementById("jasonDialogue").innerText = "杰森耸耸肩：“算了，反正也不重要。”";
+                    document.getElementById("jasonDialogue").innerText = "杰森耸耸肩：“也许你以后会有答案。”";
                 }
             }
         }
@@ -128,7 +98,7 @@ function chatWithJason() {
     updateStatus();
 }
 
-// 吃饭
+// **吃饭**
 function eat() {
     if (money < 10) {
         document.getElementById("jasonDialogue").innerText = "你没有足够的钱吃饭。";
@@ -140,7 +110,7 @@ function eat() {
     updateStatus();
 }
 
-// 工作
+// **工作**
 function work() {
     if (actionPoints < 3) {
         document.getElementById("jasonDialogue").innerText = "你太累了，无法工作。";
@@ -153,7 +123,7 @@ function work() {
     updateStatus();
 }
 
-// 画画
+// **画画**
 function draw() {
     if (actionPoints < 2) {
         document.getElementById("jasonDialogue").innerText = "你没有足够的精力作画。";
@@ -168,10 +138,12 @@ function draw() {
     updateStatus();
 }
 
-// 绑定按钮
+// **绑定按钮**
 window.eat = eat;
 window.work = work;
 window.draw = draw;
+window.sellPainting = sellPainting;
 window.endDay = endDay;
 
+// **初始化状态**
 updateStatus();
