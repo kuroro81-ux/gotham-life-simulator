@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哥谭生活模拟器</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <h1>欢迎来到哥谭</h1>
+    <p>艾琳·凯瑟琳的生存挑战开始！</p>
+    <button onclick="eat()">吃饭（+20饱食度）</button>
+    <button onclick="work()">找工作</button>
+    <button onclick="draw()">画画</button>
+    <p id="status"></p>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').then(() => {
+                console.log('Service Worker Registered');
+            });
+        }
+    </script>
+</body>
+</html>
