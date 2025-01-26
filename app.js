@@ -13,8 +13,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // **更新状态 UI**
     function updateStatus() {
-        if (statusElement) {
-            statusElement.innerText = `📅 第 ${day} 天 | ⚡ AP: ${actionPoints}/12 | 🍔 饱食度: ${hunger} | 💰 资金: $${money} | 🖼 画作: ${paintings.length}`;
+    document.getElementById("day").innerText = day;
+    document.getElementById("ap").innerText = actionPoints;
+    document.getElementById("hunger").innerText = hunger;
+    document.getElementById("money").innerText = money;
+    document.getElementById("paintings").innerText = paintings.length;
+
+    // 更新状态栏颜色（动态变化）
+    let hungerElement = document.querySelector(".hunger-display");
+    let moneyElement = document.querySelector(".money-display");
+
+    // 根据饱食度变化颜色
+    if (hunger > 60) {
+        hungerElement.style.background = "#ff4500"; // 正常（红色）
+    } else if (hunger > 30) {
+        hungerElement.style.background = "#ffa500"; // 低（橙色）
+    } else {
+        hungerElement.style.background = "#ff0000"; // 危险（深红）
+    }
+
+    // 根据金钱变化颜色
+    if (money >= 500) {
+        moneyElement.style.background = "#ffd700"; // 富有（黄金色）
+    } else if (money >= 100) {
+        moneyElement.style.background = "#daa520"; // 正常（深金色）
+    } else {
+        moneyElement.style.background = "#8b0000"; // 破产（暗红色）
+    }
             
             // 如果 AP 为 0，提醒玩家必须结束一天
             if (actionPoints <= 0) {
