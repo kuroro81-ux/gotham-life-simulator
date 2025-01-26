@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>哥谭生活模拟器</title>
-    <link rel="stylesheet" href="./style.css">  <!-- 确保正确引用 CSS -->
+    <link rel="stylesheet" href="./style.css">
     <link rel="manifest" href="./manifest.json">
-    <script src="./app.js" defer></script>  <!-- 确保正确引用 JavaScript -->
+    <script src="./app.js" defer></script>
 </head>
 <body>
     <h1>欢迎来到哥谭</h1>
     <p>艾琳·凯瑟琳的生存挑战开始！</p>
 
     <button onclick="eat()">吃饭（+20饱食度）</button>
-    <button onclick="work()">找工作</button>
-    <button onclick="draw()">画画</button>
+    <button onclick="work()">找工作（-3 AP, +$30）</button>
+    <button onclick="draw()">画画（-2 AP）</button>
     <button onclick="sellPainting()">出售画作</button>
+    <button onclick="endDay()">结束一天（恢复 AP）</button>
 
     <p id="status">状态加载中...</p>
 
