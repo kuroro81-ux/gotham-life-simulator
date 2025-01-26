@@ -8,29 +8,33 @@
     <script src="./app.js" defer></script>
 </head>
 <body>
-    <h1>🌃 欢迎来到哥谭</h1>
+    <h1>欢迎来到哥谭</h1>
     <p>艾琳·凯瑟琳的生存挑战开始！</p>
 
-    <!-- 🌟 大框 -->
+    <!-- 状态栏 -->
     <div class="main-container">
-        <!-- 状态栏 -->
         <div class="status-container">
-            <span class="info-box">📅 第 <span id="day">1</span> 天</span>
-            <span class="info-box">⚡ AP: <span id="ap">12</span>/12</span>
+            <span class="info-box">第 <span id="day">1</span> 天</span>
+            <span class="info-box">AP: <span id="ap">12</span>/12</span>
         </div>
         <div class="status-container">
-            <span class="info-box">🍔 饱食度: <span id="hunger">100</span></span>
-            <span class="info-box">💰 资金: $<span id="money">100</span></span>
-            <span class="info-box">🖼 画作: <span id="paintings">0</span></span>
+            <span class="info-box">饱食度: <span id="hunger">100</span></span>
+            <span class="info-box">资金: $<span id="money">100</span></span>
+            <span class="info-box">画作: <span id="paintings">0</span></span>
         </div>
 
-        <!-- 选项文本居中 -->
+        <!-- 选项 -->
         <div class="button-container">
             <button id="eatBtn" onclick="eat()">吃饭（+20饱食度）</button>
             <button id="workBtn" onclick="work()">找工作（-3 AP, +$30）</button>
             <button id="drawBtn" onclick="draw()">画画（-2 AP）</button>
             <button id="sellBtn" onclick="sellPainting()">出售画作</button>
             <button id="endDayBtn" onclick="endDay()">结束一天（恢复 AP）</button>
+        </div>
+
+        <!-- 杰森的对话 -->
+        <div class="dialogue-box">
+            <p id="jasonDialogue">杰森：......</p>
         </div>
     </div>
 
