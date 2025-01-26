@@ -31,7 +31,7 @@ h1 {
     box-shadow: 0 0 10px rgba(45, 40, 44, 0.8);
 }
 
-/* 🌟 状态栏信息 */
+/* 🌟 状态栏 */
 .status-container {
     display: flex;
     justify-content: space-around;
@@ -39,11 +39,17 @@ h1 {
     padding: 10px 0;
 }
 
-/* 🌟 状态信息（无背景，排布紧凑） */
-.info-box {
-    padding: 8px 15px;
-    font-size: 16px;
-    text-shadow: 0 0 5px rgba(84, 63, 75, 0.4);
+/* 🌟 选项大框 */
+.button-container {
+    background: rgb(45, 40, 44);
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 90%;
+    gap: 10px;
+    box-shadow: 0 0 8px rgba(84, 63, 75, 0.6);
 }
 
 /* 🌟 选项按钮 */
@@ -54,10 +60,11 @@ button {
     padding: 12px 20px;
     border: none;
     border-radius: 10px;
-    width: 80%;
+    width: 30%;
     cursor: pointer;
     box-shadow: 0 0 6px rgba(183, 96, 138, 0.4);
     transition: all 0.2s ease-in-out;
+    text-align: center;
 }
 
 /* 🖱 按钮悬浮效果 */
@@ -76,14 +83,4 @@ button:disabled {
     background: rgb(30, 30, 30);
     cursor: not-allowed;
     opacity: 0.5;
-}
-
-/* 🌟 选项排布紧凑 */
-.button-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    width: 100%;
-    justify-content: center;
-    padding: 10px 0;
 }
