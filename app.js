@@ -3,53 +3,48 @@ console.log("📢 app.js 已成功加载！");
 // 角色状态
 let hunger = 100;
 let money = 100;
-let paintings = []; // 存放画作
-let actionPoints = 12; // 每天的行动点数
-let day = 1; // 记录当前天数
+let paintings = []; // 画作列表
+let actionPoints = 12; // 每天的行动点
+let day = 1; // 当前天数
 
 // **等待 HTML 载入后执行**
 document.addEventListener("DOMContentLoaded", function() {
     let statusElement = document.getElementById("status");
 
-    // **更新状态 UI**
+    // **更新 UI**
     function updateStatus() {
-    document.getElementById("day").innerText = day;
-    document.getElementById("ap").innerText = actionPoints;
-    document.getElementById("hunger").innerText = hunger;
-    document.getElementById("money").innerText = money;
-    document.getElementById("paintings").innerText = paintings.length;
+        document.getElementById("day").innerText = day;
+        document.getElementById("ap").innerText = actionPoints;
+        document.getElementById("hunger").innerText = hunger;
+        document.getElementById("money").innerText = money;
+        document.getElementById("paintings").innerText = paintings.length;
 
-    // 更新状态栏颜色
-    let hungerElement = document.querySelector(".hunger-display");
-    let moneyElement = document.querySelector(".money-display");
+        // 更新状态颜色
+        let hungerElement = document.querySelector(".hunger-display");
+        let moneyElement = document.querySelector(".money-display");
 
-    // 根据饱食度变化颜色
-    if (hunger > 60) {
-        hungerElement.style.background = "linear-gradient(45deg, #ff7700, #ff4500)";
-    } else if (hunger > 30) {
-        hungerElement.style.background = "linear-gradient(45deg, #ff9900, #ff6600)";
-    } else {
-        hungerElement.style.background = "linear-gradient(45deg, #ff3300, #cc0000)";
-    }
-
-    // 根据金钱变化颜色
-    if (money >= 500) {
-        moneyElement.style.background = "linear-gradient(45deg, #ffd700, #ffaa00)";
-    } else if (money >= 100) {
-        moneyElement.style.background = "linear-gradient(45deg, #daa520, #ff9900)";
-    } else {
-        moneyElement.style.background = "linear-gradient(45deg, #8b0000, #ff0000)";
-    }
-    }        
-            // 如果 AP 为 0，提醒玩家必须结束一天
-            if (actionPoints <= 0) {
-                alert("⚠️ 你的 AP 已用完！请点击 '结束一天' 按钮恢复 AP。");
-                disableActions();
-            } else {
-                enableActions();
-            }
+        if (hunger > 60) {
+            hungerElement.style.background = "linear-gradient(45deg, #ff9966, #ff5555)";
+        } else if (hunger > 30) {
+            hungerElement.style.background = "linear-gradient(45deg, #ffcc66, #ff9966)";
         } else {
-            console.error("⚠️ 无法找到 status 元素，请检查 HTML 代码！");
+            hungerElement.style.background = "linear-gradient(45deg, #ff6666, #cc0000)";
+        }
+
+        if (money >= 500) {
+            moneyElement.style.background = "linear-gradient(45deg, #ffdd77, #ffaa33)";
+        } else if (money >= 100) {
+            moneyElement.style.background = "linear-gradient(45deg, #ffcc66, #ff9966)";
+        } else {
+            moneyElement.style.background = "linear-gradient(45deg, #ff3333, #cc0000)";
+        }
+
+        // 如果 AP 为 0，禁用行动按钮
+        if (actionPoints <= 0) {
+            disableActions();
+            alert("⚠️ 你的 AP 已用完！请点击 '结束一天' 按钮恢复 AP。");
+        } else {
+            enableActions();
         }
     }
 
@@ -65,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("drawBtn").disabled = false;
     }
 
-    // **结束一天，恢复 AP，并触发随机事件**
+    // **结束一天**
     function endDay() {
         actionPoints = 12;
         day += 1;
@@ -73,13 +68,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
         alert(`🌅 新的一天开始了！今天是第 ${day} 天。\n你的 AP 已恢复为 12。\n⚠️ 饱食度减少 20，请注意补充食物！`);
 
-        // **触发随机事件**
+        // 触发随机事件
         randomEvent();
 
         updateStatus();
     }
 
-    // **消耗 AP 的通用函数**
+    // **通用 AP 消耗**
     function consumeAP(amount) {
         if (actionPoints < amount) {
             alert("⚠️ 你的 AP 不足，必须结束一天才能恢复！");
@@ -92,27 +87,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // **吃饭（不消耗 AP）**
     function eat() {
-        console.log("🍽 吃饭按钮被点击");
         hunger += 20;
         updateStatus();
     }
 
     // **找工作（消耗 3 AP）**
     function work() {
-        console.log("💼 找工作按钮被点击");
-
         if (!consumeAP(3)) return;
-
         hunger -= 10;
-        money += 30; // 找工作赚钱
+        money += 30;
         alert("💰 你工作了一天，赚了 $30！");
         updateStatus();
     }
 
     // **画画（消耗 2 AP）**
     function draw() {
-        console.log("🎨 画画按钮被点击");
-
         if (!consumeAP(2)) return;
 
         if (hunger <= 0) {
@@ -132,8 +121,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // **出售画作（不消耗 AP）**
     function sellPainting() {
-        console.log("🖼 出售画作按钮被点击");
-
         if (paintings.length === 0) {
             alert("⚠️ 你没有画可以卖！");
             return;
@@ -166,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 effect: () => {
                     if (paintings.length >= 3) {
                         alert("🏛 画廊经理看中了你的作品！他邀请你举办画展，提升声望！");
-                        paintings = []; // 清空画作
+                        paintings = [];
                     } else {
                         alert("🏛 画廊经理来了，但你没有足够的画作举办展览...");
                     }
