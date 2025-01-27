@@ -76,14 +76,22 @@ button:hover {
 #eventLog {
     color: rgb(210, 180, 200); /* 浅紫色 */
     font-size: 14px;
-    border-bottom: 1px solid rgba(183, 96, 138, 0.5); /* 添加底部分割线 */
     padding-bottom: 8px;
+    order: -1; /* 让今日事件排在最前面 */
 }
 
-/* 📌 杰森的对话，调整到下方 */
+/* 📌 添加分割线 */
+.divider {
+    width: 80%;
+    height: 1px;
+    background-color: rgba(183, 96, 138, 0.5); /* 分割线颜色 */
+    margin: 5px auto;
+}
+
+/* 📌 杰森的对话，调整到下方，去除加粗 */
 #jasonDialogue {
     color: rgb(183, 96, 138); /* 粉色 */
     font-size: 16px;
-    font-weight: bold;
     padding-top: 8px;
+    font-weight: normal; /* 取消加粗 */
 }
