@@ -1,24 +1,30 @@
 console.log("app.js 已成功加载！");
 
-// **角色状态**
-let hunger = 100;
-let money = 100;
-let paintings = [];
-let actionPoints = 12;
-let day = 1;
+// ===================== 角色状态 =====================
+let hunger = 100;        // 饥饿度
+let money = 100;         // 资金
+let paintings = [];      // 画作数组
+let actionPoints = 12;   // 当天剩余行动点
+let day = 1;             // 当前天数
 let typingTimeout = null; // 防止对话刷新乱码问题
 
-// **存档功能**
+// ===================== 存档功能 =====================
 function saveGame() {
-    let gameState = { hunger, money, paintings, actionPoints, day };
+    const gameState = {
+        hunger,
+        money,
+        paintings,
+        actionPoints,
+        day
+    };
     localStorage.setItem("gothamLifeSave", JSON.stringify(gameState));
 }
 
-// **读取存档**
+// ===================== 读取存档 =====================
 function loadGame() {
-    let saveData = localStorage.getItem("gothamLifeSave");
+    const saveData = localStorage.getItem("gothamLifeSave");
     if (saveData) {
-        let gameState = JSON.parse(saveData);
+        const gameState = JSON.parse(saveData);
         hunger = gameState.hunger;
         money = gameState.money;
         paintings = gameState.paintings;
@@ -27,7 +33,7 @@ function loadGame() {
     }
 }
 
-// **清除存档**
+// ===================== 清除存档 =====================
 function resetGame() {
     localStorage.removeItem("gothamLifeSave"); // 先清除存档
     hunger = 100;
@@ -38,7 +44,7 @@ function resetGame() {
     updateStatus();
 }
 
-// **更新 UI，并检查是否游戏结束**
+// ===================== 更新UI & 检查游戏结束 =====================
 function updateStatus() {
     document.getElementById("day").innerText = day;
     document.getElementById("ap").innerText = actionPoints;
@@ -46,21 +52,25 @@ function updateStatus() {
     document.getElementById("money").innerText = money;
     document.getElementById("paintings").innerText = paintings.length;
 
+    // 饥饿检查：<=0 游戏结束
     if (hunger <= 0) {
         alert("你因饥饿过度晕倒了，游戏结束。");
         resetGame();
         return;
     }
 
+    // 每次更新完状态都存档
     saveGame();
 }
 
-// **确保杰森对话框存在**
+// ===================== 对话相关 =====================
+
+// 确保杰森对话框存在
 function checkJasonDialogueBox() {
     return !!document.getElementById("jasonDialogue");
 }
 
-// **逐步显示杰森的对话**
+// 逐步显示杰森的对话
 function showJasonDialogue(dialogue) {
     if (!checkJasonDialogueBox()) {
         console.error("❌ 错误：找不到 #jasonDialogue");
@@ -86,14 +96,16 @@ function showJasonDialogue(dialogue) {
     typeNext();
 }
 
-// **确保杰森的对话每天固定**
+// 每天随机生成一次对话，并存储到 localStorage
 function chatWithJason() {
-    let savedDialogue = localStorage.getItem("jasonDialogue"); // 读取存储的对话
+    let savedDialogue = localStorage.getItem("jasonDialogue");
     if (savedDialogue) {
+        // 如果当天已经生成过，就直接显示
         showJasonDialogue(savedDialogue);
         return;
     }
-    let dialogues = [
+
+    const dialogues = [
         "杰森：哥谭的街头永远不安全。\n他倚靠在墙上，眼神游离了一会儿，像是想到了什么不太愉快的回忆。",
         "杰森：今天遇到了迪克，我们聊了聊。\n他勾起嘴角，像是在回忆什么。'这家伙还是那么多话，不过至少他还愿意听我说点什么。'",
         "杰森：有时候，我在想如果布鲁斯……\n他的话语断在半空中，最终还是没有继续下去。沉默中，你隐约听见他低声叹息。",
@@ -109,19 +121,16 @@ function chatWithJason() {
         "杰森：如果有一天，我突然消失了……\n他的话停在半空中，似乎在等你的反应。然后他笑了笑，'没事，随便问问。'"
     ];
 
+    // 随机选一句
     let dialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
-    localStorage.setItem("jasonDialogue", dialogue); // 存储当天的对话
+    // 存到 localStorage，以便当天再次调用
+    localStorage.setItem("jasonDialogue", dialogue);
     showJasonDialogue(dialogue);
 }
 
-// **结束一天，生成新对话**
-window.endDay = function() {
-    actionPoints = 12;
-    day += 1;
-    hunger -= 20;
-    updateStatus();
+// ===================== 游戏操作函数 =====================
 
-// **吃饭**
+// 吃饭
 window.eat = function() {
     if (money < 10) {
         showJasonDialogue("你没有足够的钱吃饭。");
@@ -133,7 +142,7 @@ window.eat = function() {
     updateStatus();
 };
 
-// **找工作**
+// 找工作
 window.work = function() {
     if (actionPoints < 3) {
         showJasonDialogue("你太累了，无法工作。");
@@ -146,7 +155,7 @@ window.work = function() {
     updateStatus();
 };
 
-// **画画**
+// 画画
 window.draw = function() {
     if (actionPoints < 2) {
         showJasonDialogue("你没有足够的精力作画。");
@@ -161,7 +170,7 @@ window.draw = function() {
     updateStatus();
 };
 
-// **出售画作**
+// 出售画作
 window.sellPainting = function() {
     if (paintings.length === 0) {
         showJasonDialogue("你没有画作可以出售。");
@@ -173,24 +182,28 @@ window.sellPainting = function() {
     updateStatus();
 };
 
-// **结束一天，触发随机事件 & 杰森对话**
+// 结束一天
 window.endDay = function() {
     actionPoints = 12;
     day += 1;
     hunger -= 20;
     updateStatus();
 
+    // 触发随机事件，并写入 eventLog
     let eventLog = document.getElementById("eventLog");
     if (eventLog) {
         eventLog.innerText = "今日事件：" + randomEvent();
     }
 
+    // 新的杰森对话（会重置当天对话）
+    // 先移除当天旧的存储，让 chatWithJason() 重新生成
+    localStorage.removeItem("jasonDialogue");
     chatWithJason();
 };
 
-// **随机今日事件**
+// ===================== 随机事件 =====================
 function randomEvent() {
-    let events = [
+    const events = [
         "你在街上看到了一只流浪猫，它对你喵喵叫。",
         "一个神秘的黑衣人给了你一张纸条，上面写着“离开哥谭”。",
         "你踩到了一张百元大钞，幸运的是没人看到。",
@@ -247,15 +260,23 @@ function randomEvent() {
         "你在夜市买了一碗热腾腾的面，味道竟然比预想的还要好。"
     ];
 
-    let event = events[Math.floor(Math.random() * events.length)];
-    return event;
+    return events[Math.floor(Math.random() * events.length)];
 }
-// **绑定按钮**
-window.resetGame = resetGame;
 
-// **初始化游戏**
+// ===================== 绑定到 window（可选） =====================
+window.resetGame = resetGame; // 如果HTML用onclick="resetGame()"
+
+// ===================== 初始化游戏 =====================
 document.addEventListener("DOMContentLoaded", function() {
     loadGame();
     updateStatus();
     chatWithJason();
+
+    // 如果你的HTML按钮不是使用 `onclick="xxx()"`，可以在这用事件监听绑定
+    // document.getElementById("eatBtn").addEventListener("click", eat);
+    // document.getElementById("workBtn").addEventListener("click", work);
+    // document.getElementById("drawBtn").addEventListener("click", draw);
+    // document.getElementById("sellBtn").addEventListener("click", sellPainting);
+    // document.getElementById("endDayBtn").addEventListener("click", endDay);
+    // document.getElementById("resetBtn").addEventListener("click", resetGame);
 });
