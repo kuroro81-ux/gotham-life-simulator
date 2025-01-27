@@ -131,7 +131,7 @@ function chatWithJason() {
 // ===================== 游戏操作函数 =====================
 
 // 吃饭
-window.eat = function() {
+function eat() {
     if (money < 10) {
         showJasonDialogue("你没有足够的钱吃饭。");
         return;
@@ -140,10 +140,10 @@ window.eat = function() {
     hunger += 20;
     showJasonDialogue("你吃了一顿饭，恢复了体力。");
     updateStatus();
-};
+}
 
 // 找工作
-window.work = function() {
+function work() {
     if (actionPoints < 3) {
         showJasonDialogue("你太累了，无法工作。");
         return;
@@ -153,10 +153,10 @@ window.work = function() {
     money += 30;
     showJasonDialogue("你努力了一天，赚了一些钱。");
     updateStatus();
-};
+}
 
 // 画画
-window.draw = function() {
+function draw() {
     if (actionPoints < 2) {
         showJasonDialogue("你没有足够的精力作画。");
         return;
@@ -168,10 +168,10 @@ window.draw = function() {
     paintings.push({ quality, value });
     showJasonDialogue(`你完成了一幅画，质量：${quality}，价值：$${value}`);
     updateStatus();
-};
+}
 
 // 出售画作
-window.sellPainting = function() {
+function sellPainting() {
     if (paintings.length === 0) {
         showJasonDialogue("你没有画作可以出售。");
         return;
@@ -180,10 +180,10 @@ window.sellPainting = function() {
     money += painting.value;
     showJasonDialogue(`你卖出了一幅画，获得 $${painting.value}`);
     updateStatus();
-};
+}
 
 // 结束一天
-window.endDay = function() {
+function endDay() {
     actionPoints = 12;
     day += 1;
     hunger -= 20;
@@ -196,10 +196,9 @@ window.endDay = function() {
     }
 
     // 新的杰森对话（会重置当天对话）
-    // 先移除当天旧的存储，让 chatWithJason() 重新生成
     localStorage.removeItem("jasonDialogue");
     chatWithJason();
-};
+}
 
 // ===================== 随机事件 =====================
 function randomEvent() {
@@ -263,20 +262,17 @@ function randomEvent() {
     return events[Math.floor(Math.random() * events.length)];
 }
 
-// ===================== 绑定到 window（可选） =====================
-window.resetGame = resetGame; // 如果HTML用onclick="resetGame()"
+// ===================== 将函数挂到 window（供 HTML onclick 调用） =====================
+window.eat = eat;
+window.work = work;
+window.draw = draw;
+window.sellPainting = sellPainting;
+window.endDay = endDay;
+window.resetGame = resetGame;
 
 // ===================== 初始化游戏 =====================
 document.addEventListener("DOMContentLoaded", function() {
     loadGame();
     updateStatus();
     chatWithJason();
-
-    // 如果你的HTML按钮不是使用 `onclick="xxx()"`，可以在这用事件监听绑定
-    // document.getElementById("eatBtn").addEventListener("click", eat);
-    // document.getElementById("workBtn").addEventListener("click", work);
-    // document.getElementById("drawBtn").addEventListener("click", draw);
-    // document.getElementById("sellBtn").addEventListener("click", sellPainting);
-    // document.getElementById("endDayBtn").addEventListener("click", endDay);
-    // document.getElementById("resetBtn").addEventListener("click", resetGame);
 });
