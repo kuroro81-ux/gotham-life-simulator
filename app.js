@@ -1,202 +1,257 @@
 console.log("app.js 已成功加载！");
 
-// ===================== 角色状态 =====================
-let hunger = 100;        // 饥饿度
-let money = 100;         // 资金
-let paintings = [];      // 画作数组
-let actionPoints = 12;   // 当天剩余行动点
-let day = 1;             // 当前天数
-let typingTimeout = null; // 防止对话刷新乱码问题
+// ============ 角色基础状态 ============
+let hunger = 100;         // 饥饿度
+let money = 100;          // 资金
+let paintings = [];       // 画作数组
+let actionPoints = 12;    // 当天可用行动点
+let day = 1;              // 当前天数
+let typingTimeout = null; // 打字机定时器
+let jasonAffection = 0;   // 杰森好感度
 
-// ===================== 地图/地点系统 =====================
-let currentLocation = "apartment"; // 初始地点：公寓
+// 若玩家购买了“高级画材”，则下次画画时获得价值加成
+let hasAdvancedPaintKit = false; 
 
-// 你可以添加更多地点，或调整这里的描述、可执行操作
+// ============ 地图 / 地点系统 ============
+let currentLocation = "apartment"; // 初始地点
+
 const locations = {
-    apartment: {
-        name: "破旧公寓",
-        description: "你的廉租公寓，简单但算是个安全的庇护所。",
-        actions: ["draw", "eat"] // 仅在公寓可执行的操作
-    },
-    street: {
-        name: "哥谭街头",
-        description: "混乱而危险的街头，鱼龙混杂，各种奇遇都有可能发生。",
-        actions: ["work", "wander"] // 示例：街头可打工，也可随意闲逛
-    },
-    blackMarket: {
-        name: "黑市",
-        description: "不见天日的地下市场，很多见不得光的交易在这里进行。",
-        actions: ["sellPainting"]
-    }
+  apartment: {
+    name: "破旧公寓",
+    description: "你的廉租公寓，简单但算是个安全的庇护所。",
+  },
+  street: {
+    name: "哥谭街头",
+    description: "混乱而危险的街头，鱼龙混杂，各种奇遇都有可能发生。",
+  },
+  blackMarket: {
+    name: "黑市",
+    description: "不见天日的地下市场，很多见不得光的交易在这里进行。",
+  }
 };
 
-// ===================== 存档功能 =====================
+// ============ 存档功能 ============
 function saveGame() {
-    const gameState = {
-        hunger,
-        money,
-        paintings,
-        actionPoints,
-        day,
-        currentLocation
-    };
-    localStorage.setItem("gothamLifeSave", JSON.stringify(gameState));
+  const gameState = {
+    hunger,
+    money,
+    paintings,
+    actionPoints,
+    day,
+    currentLocation,
+    jasonAffection,
+    hasAdvancedPaintKit
+  };
+  localStorage.setItem("gothamLifeSave", JSON.stringify(gameState));
 }
 
-// ===================== 读取存档 =====================
 function loadGame() {
-    const saveData = localStorage.getItem("gothamLifeSave");
-    if (saveData) {
-        const gameState = JSON.parse(saveData);
-        hunger = gameState.hunger;
-        money = gameState.money;
-        paintings = gameState.paintings;
-        actionPoints = gameState.actionPoints;
-        day = gameState.day;
-        currentLocation = gameState.currentLocation || "apartment";
-    }
+  const data = localStorage.getItem("gothamLifeSave");
+  if (data) {
+    const gs = JSON.parse(data);
+    hunger = gs.hunger;
+    money = gs.money;
+    paintings = gs.paintings;
+    actionPoints = gs.actionPoints;
+    day = gs.day;
+    currentLocation = gs.currentLocation || "apartment";
+    jasonAffection = gs.jasonAffection || 0;
+    hasAdvancedPaintKit = gs.hasAdvancedPaintKit || false;
+  }
 }
 
-// ===================== 清除存档 =====================
 function resetGame() {
-    localStorage.removeItem("gothamLifeSave"); // 先清除存档
-    hunger = 100;
-    money = 100;
-    paintings = [];
-    actionPoints = 12;
-    day = 1;
-    currentLocation = "apartment";
-    updateStatus();
+  localStorage.removeItem("gothamLifeSave");
+  hunger = 100;
+  money = 100;
+  paintings = [];
+  actionPoints = 12;
+  day = 1;
+  currentLocation = "apartment";
+  jasonAffection = 0;
+  hasAdvancedPaintKit = false;
+  updateStatus();
 }
 
-/**
- * 切换地点：
- *   locKey : "apartment", "street", "blackMarket", ...
- *   consumeAp: 是否消耗AP（默认true）。若在加载时仅想显示位置，传false。
- */
-function travelToLocation(locKey, consumeAp = true) {
-    if (!locations[locKey]) {
-        console.error("未知地点:", locKey);
-        return;
-    }
-
-    // 如果需要扣 AP
-    if (consumeAp) {
-        if (actionPoints < 1) {
-            showJasonDialogue("你太累了，走不动了。");
-            return;
-        }
-        actionPoints -= 1;
-        updateStatus();
-    }
-
-    currentLocation = locKey;
-
-    // 更新状态（不重复扣 AP）
-    updateStatus();
-
-    // 显示地点信息
-    const locationData = locations[locKey];
-    let dialogueBox = document.getElementById("jasonDialogue");
-    if (dialogueBox) {
-        dialogueBox.innerText = `你来到了【${locationData.name}】。\n${locationData.description}`;
-    }
-
-    // 可以触发地点特有随机事件
-    let eventLog = document.getElementById("eventLog");
-    if (eventLog) {
-        let ev = placeRandomEvent(locKey);
-        eventLog.innerText = "事件：" + ev;
-    }
-}
-
-// ===================== 页面加载时 =====================
-document.addEventListener("DOMContentLoaded", function() {
-    loadGame();
-    updateStatus();
-
-    // 不消耗 AP，只是显示当前位置
-    travelToLocation(currentLocation, false);
-
-    // 生成或显示当日对话
-    chatWithJason();
-});
-
-// 给各地点配置自己的随机事件，也可以不写，就用默认的 randomEvent()
-function placeRandomEvent(locKey) {
-    const eventsByLocation = {
-        apartment: [
-            "你发现窗台上落了一只受伤的小鸟。",
-            "楼道里灯泡又坏了，昏暗中你差点摔倒。",
-            "邻居的电视声音很大，让你休息不太安稳。"
-        ],
-        street: [
-            "有人在路边卖演唱会门票，你犹豫几秒还是没买。",
-            "街头一个小混混盯上了你，但似乎没有动手。",
-            "一场突如其来的小雨，你狼狈地找地方躲雨。"
-        ],
-        blackMarket: [
-            "你看到有人公然卖违禁药品。",
-            "一个戴面具的人低声问：'要不要来点特殊货？'",
-            "空气里弥漫着焦躁和危险的气息。"
-        ]
-        // 如果想添加更多地点，就继续加
-    };
-
-    if (!eventsByLocation[locKey]) {
-        // 如果没定义，就调用你的通用随机事件
-        return randomEvent();
-    }
-    let arr = eventsByLocation[locKey];
-    let rand = Math.floor(Math.random() * arr.length);
-    return arr[rand];
-}
-
-// ===================== 更新UI & 检查游戏结束 =====================
+// ============ UI更新 & 检查游戏结束 ============
 function updateStatus() {
-    document.getElementById("day").innerText = day;
-    document.getElementById("ap").innerText = actionPoints;
-    document.getElementById("hunger").innerText = hunger;
-    document.getElementById("money").innerText = money;
-    document.getElementById("paintings").innerText = paintings.length;
+  document.getElementById("day").innerText = day;
+  document.getElementById("ap").innerText = actionPoints;
+  document.getElementById("hunger").innerText = hunger;
+  document.getElementById("money").innerText = money;
+  document.getElementById("paintings").innerText = paintings.length;
 
-    if (hunger <= 0) {
-        alert("你因饥饿过度晕倒了，游戏结束。");
-        resetGame();
-        return;
-    }
+  // 饥饿检查
+  if (hunger <= 0) {
+    alert("你因饥饿过度晕倒了，游戏结束。");
+    resetGame();
+    return;
+  }
 
-    // 每次更新后保存
-    saveGame();
+  // 每次更新完就存档
+  saveGame();
+
+  // 每次更新完，根据地点渲染对应按钮
+  renderActionsByLocation();
 }
 
-// ===================== 对话相关 =====================
+// ============ 切换地点函数 (不消耗AP可自己设置) ============
+function travelToLocation(locKey) {
+  // 如果要在切换地点时消耗AP，可以在此处理
+  if (actionPoints < 1) {
+    showJasonDialogue("你太累了，走不动了。");
+    return;
+  }
+  actionPoints -= 1;
 
-// 逐步显示杰森的对话
+  currentLocation = locKey;
+  updateStatus();
+
+  let desc = locations[locKey].description;
+  document.getElementById("jasonDialogue").innerText = 
+    `你来到了【${locations[locKey].name}】。\n${desc}`;
+
+  let eventLog = document.getElementById("eventLog");
+  if (eventLog) {
+    eventLog.innerText = "事件：" + placeRandomEvent(locKey);
+  }
+}
+
+// 依据地点选一个随机事件
+function placeRandomEvent(locKey) {
+  const placeEvents = {
+    apartment: [
+      "邻居的电视声很大，让你休息不太安稳。",
+      "你发现旧报纸上有关于红头罩的报道。",
+      "楼道灯泡再次坏了，你只能摸黑回房。"
+    ],
+    street: [
+      "街头有人在卖廉价啤酒。",
+      "你看到小混混们正在打劫路人。",
+      "一阵大雨让你措手不及。"
+    ],
+    blackMarket: [
+      "你看到有人在私下卖违禁武器。",
+      "一个神秘商人向你推销奇怪的化学药剂。",
+      "空气里弥漫着危险的气息。"
+    ]
+  };
+  if (!placeEvents[locKey]) {
+    return randomEvent();
+  }
+  let arr = placeEvents[locKey];
+  let i = Math.floor(Math.random() * arr.length);
+  return arr[i];
+}
+
+// ============ 递进式：根据地点显示不同按钮 ============
+function renderActionsByLocation() {
+  const actionContainer = document.getElementById("actionContainer");
+  if (!actionContainer) return;
+
+  // 先清空按钮
+  actionContainer.innerHTML = "";
+
+  // 不同地点可使用的动作
+  let actionList = [];
+
+  if (currentLocation === "apartment") {
+    actionList = [
+      { label: "画画", fn: draw },
+      { label: "吃饭", fn: eat }
+    ];
+  } else if (currentLocation === "street") {
+    actionList = [
+      { label: "打工", fn: work },
+      { label: "进入商店", fn: openStreetShop }, // 新增：街头商店
+      { label: "闲逛", fn: wander }
+    ];
+  } else if (currentLocation === "blackMarket") {
+    actionList = [
+      { label: "卖画", fn: sellPainting }
+    ];
+  }
+
+  // 通用操作：查看画作、捡道具、查看背包、结束一天、重置游戏等
+  // 这些你可以随时可见，也可按需只在某些地点显示
+  let commonActions = [
+    { label: "查看画作", fn: viewPaintings },
+    { label: "捡一个道具", fn: acquireItem },
+    { label: "查看背包", fn: viewBackpack },
+    { label: "结束一天", fn: endDay },
+    { label: "重置游戏", fn: resetGame }
+  ];
+
+  // 合并地点专属动作 + 通用动作
+  let finalActions = actionList.concat(commonActions);
+
+  // 动态生成按钮
+  finalActions.forEach(act => {
+    let btn = document.createElement("button");
+    btn.textContent = act.label;
+    btn.onclick = act.fn;
+    actionContainer.appendChild(btn);
+  });
+}
+
+// ============ 街头商店示例 ============
+function openStreetShop() {
+  // 弹出一个简单的商店UI或对话
+  // 这里用prompt做演示，实际可用更好的方式
+  let shopMsg =
+    "【街头商店】\n" +
+    "1) 高级画材($50) - 提高下次画画价值\n" +
+    "2) 礼物($30) - 提升杰森好感度\n" +
+    "请输入要购买的编号(1或2)，或按取消退出。";
+  let choice = prompt(shopMsg);
+  if (!choice) return; // 取消或空输入，退出
+
+  if (choice === "1") {
+    if (money < 50) {
+      showJasonDialogue("你没足够的钱买高级画材。");
+      return;
+    }
+    money -= 50;
+    hasAdvancedPaintKit = true; 
+    showJasonDialogue("你购买了高级画材，下次画画时会提高价值。");
+    updateStatus();
+  } else if (choice === "2") {
+    if (money < 30) {
+      showJasonDialogue("你没足够的钱买礼物。");
+      return;
+    }
+    money -= 30;
+    jasonAffection += 5; // 提升杰森好感度
+    showJasonDialogue("你买了一份小礼物，准备下次见到杰森送他。");
+    updateStatus();
+  } else {
+    showJasonDialogue("你没有购买任何物品。");
+  }
+}
+
+// ============ 对话相关(杰森) ============
 function showJasonDialogue(dialogue) {
-    let dialogueBox = document.getElementById("jasonDialogue");
-    if (!dialogueBox) {
-        console.error("❌ 错误：找不到 #jasonDialogue");
-        return;
-    }
+  let box = document.getElementById("jasonDialogue");
+  if (!box) {
+    console.error("找不到 jasonDialogue 容器");
+    return;
+  }
+  box.innerHTML = "";
+  let idx = 0;
+  if (typingTimeout) clearTimeout(typingTimeout);
 
-    dialogueBox.innerHTML = "";
-    let index = 0;
-    if (typingTimeout) clearTimeout(typingTimeout);
-
-    function typeNext() {
-        if (index < dialogue.length) {
-            dialogueBox.innerHTML += dialogue[index];
-            index++;
-            typingTimeout = setTimeout(typeNext, 40);
-        } else {
-            typingTimeout = null;
-        }
+  function typeNext() {
+    if (idx < dialogue.length) {
+      box.innerHTML += dialogue[idx];
+      idx++;
+      typingTimeout = setTimeout(typeNext, 40);
+    } else {
+      typingTimeout = null;
     }
-    typeNext();
+  }
+  typeNext();
 }
 
-// 随机对话
 function chatWithJason() {
     let savedDialogue = localStorage.getItem("jasonDialogue");
     if (savedDialogue) {
@@ -205,7 +260,7 @@ function chatWithJason() {
         return;
     }
 
-    const dialogues = [
+    let dialogues = [
         "杰森：哥谭的街头永远不安全。\n他倚靠在墙上，眼神游离了一会儿，像是想到了什么不太愉快的回忆。",
         "杰森：今天遇到了迪克，我们聊了聊。\n他勾起嘴角，像是在回忆什么。'这家伙还是那么多话，不过至少他还愿意听我说点什么。'",
         "杰森：有时候，我在想如果布鲁斯……\n他的话语断在半空中，最终还是没有继续下去。沉默中，你隐约听见他低声叹息。",
@@ -220,16 +275,14 @@ function chatWithJason() {
         "杰森：你觉得你能在这座城市活多久？\n他说得很平静，像是在问你今天想吃什么。但你知道他是认真的。",
         "杰森：如果有一天，我突然消失了……\n他的话停在半空中，似乎在等你的反应。然后他笑了笑，'没事，随便问问。'"
     ];
-
-    let dialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
-    localStorage.setItem("jasonDialogue", dialogue);
-    showJasonDialogue(dialogue);
+  let d = dialogues[Math.floor(Math.random() * dialogues.length)];
+  localStorage.setItem("jasonDialogue", d);
+  showJasonDialogue(d);
 }
 
-
-// ===================== 通用随机事件 =====================
+// ============ 通用随机事件(若地点无专属事件时用) ============
 function randomEvent() {
-    const events = [
+    let events = [
         "你在街上看到了一只流浪猫，它对你喵喵叫。",
         "一个神秘黑衣人给了你一张纸条，上面写着“离开哥谭”。",
         "你踩到了一张百元大钞，幸运的是没人看到。",
@@ -283,208 +336,205 @@ function randomEvent() {
         "你看到街头艺人在表演魔术，手法相当精湛。",
         "一个小贩请你免费尝试他最新的特制汉堡。",
         "你在夜市买了一碗面，味道竟意外地不错。"
-    ];
-    return events[Math.floor(Math.random() * events.length)];
+  ];
+  return events[Math.floor(Math.random() * events.length)];
 }
 
-// ===================== 游戏操作函数 =====================
-
-// 吃饭(仅在公寓能执行？可自行决定)
+// ============ 操作函数：吃饭、打工、画画、卖画等 ============
 function eat() {
-    if (currentLocation !== "apartment") {
-        showJasonDialogue("你现在不在公寓，无法做饭或点外卖。");
-        return;
-    }
-    if (money < 10) {
-        showJasonDialogue("你没有足够的钱吃饭。");
-        return;
-    }
-    money -= 10;
-    hunger += 20;
-    showJasonDialogue("你吃了一顿饭，恢复了体力。");
-    updateStatus();
+  if (actionPoints < 1) {
+    showJasonDialogue("你太累了，无法再行动。");
+    return;
+  }
+  if (money < 10) {
+    showJasonDialogue("你没有足够的钱吃饭。");
+    return;
+  }
+  if (currentLocation !== "apartment") {
+    showJasonDialogue("你需要在公寓才能吃饭。");
+    return;
+  }
+  money -= 10;
+  hunger += 30;
+  actionPoints -= 1;
+  showJasonDialogue("你吃了一顿饭，恢复了体力。");
+  updateStatus();
 }
 
-// 在街头打工
 function work() {
-    if (currentLocation !== "street") {
-        showJasonDialogue("只能在街头找工作/打零工。");
-        return;
-    }
-    if (actionPoints < 3) {
-        showJasonDialogue("你太累了，无法工作。");
-        return;
-    }
-    actionPoints -= 3;
-    hunger -= 10;
-    money += 30;
-    showJasonDialogue("你努力工作了一天，赚到一些钱。");
-    updateStatus();
+  if (actionPoints < 3) {
+    showJasonDialogue("你太累了，无法工作。");
+    return;
+  }
+  if (currentLocation !== "street") {
+    showJasonDialogue("只能在街头打工。");
+    return;
+  }
+  actionPoints -= 3;
+  hunger -= 10;
+  money += 30;
+  showJasonDialogue("你在街头做了零工，赚到一些钱。");
+  updateStatus();
 }
 
-/****************************************
- * 画作系统
- ****************************************/
+/** 画画：若买了高级画材则提高价值 */
 function draw() {
-    if (actionPoints < 2) {
-        showJasonDialogue("你没有足够的精力作画。");
-        return;
-    }
-    if (currentLocation !== "apartment") {
-        showJasonDialogue("这里不方便作画，需要回到公寓。");
-        return;
-    }
+  if (actionPoints < 2) {
+    showJasonDialogue("你没有足够的精力作画。");
+    return;
+  }
+  if (currentLocation !== "apartment") {
+    showJasonDialogue("你需要在公寓才能安心作画。");
+    return;
+  }
+  actionPoints -= 2;
+  hunger -= 10;
 
-    actionPoints -= 2;
-    hunger -= 10;
+  let quality = Math.floor(Math.random() * 100) + 1;
+  let baseValue = quality * 2;
 
-    let quality = Math.floor(Math.random() * 100) + 1;
-    let value = quality * 2;
+  // 若有高级画材，加成50%
+  let finalValue = hasAdvancedPaintKit ? Math.floor(baseValue * 1.5) : baseValue;
+  // 用完后就归false，表示只有一次加成
+  hasAdvancedPaintKit = false;
 
-    let paintingName = prompt("给你的新画作取个名字吧？（可留空）") || "未命名";
+  let paintingName = prompt("给这幅画取个名字吧？") || "未命名";
 
-    const styleOptions = [
-        "写实主义", "超现实主义", "抽象派",
-        "波普艺术", "印象派", "表现主义",
-        "街头涂鸦风", "哥特蒸汽风"
-    ];
-    let randomStyle = styleOptions[Math.floor(Math.random() * styleOptions.length)];
+  let styleOptions = ["写实派","抽象派","波普艺术","印象派"];
+  let chosenStyle = styleOptions[Math.floor(Math.random() * styleOptions.length)];
 
-    const descOptions = [
-        "仿佛蕴含着城市的黑暗气息。",
-        "带着哥谭特有的阴郁，却又闪烁些许希望。",
-        "色彩大胆，对比强烈，让人过目难忘。",
-        "让人联想到童年的幻象与无尽的宿命。",
-        "似乎能听到蝙蝠拍打的回声，街灯在颤抖。"
-    ];
-    let randomDesc = descOptions[Math.floor(Math.random() * descOptions.length)];
+  let desc = "色彩大胆，展现了哥谭的阴郁氛围。";
+  
+  paintings.push({
+    name: paintingName,
+    style: chosenStyle,
+    desc: desc,
+    quality: quality,
+    value: finalValue
+  });
 
-    paintings.push({
-        name: paintingName,
-        style: randomStyle,
-        desc: randomDesc,
-        quality,
-        value
-    });
+  showJasonDialogue(
+    `你完成了新画作：《${paintingName}》\n风格：${chosenStyle}\n质量：${quality}\n价值：$${finalValue}`
+  );
 
-    showJasonDialogue(
-        `你完成了新画作：《${paintingName}》\n` +
-        `风格：${randomStyle}\n` +
-        `质量：${quality}，价值：$${value}\n` +
-        `描述：${randomDesc}`
-    );
-
-    updateStatus();
+  updateStatus();
 }
 
+/** 在黑市卖画 */
+function sellPainting() {
+  if (currentLocation !== "blackMarket") {
+    showJasonDialogue("只能在黑市卖画。");
+    return;
+  }
+  if (paintings.length === 0) {
+    showJasonDialogue("你没有画作可卖。");
+    return;
+  }
+  let painting = paintings.shift(); 
+  money += painting.value;
+  showJasonDialogue(`你卖出《${painting.name}》，获得$${painting.value}`);
+  updateStatus();
+}
+
+// 闲逛
+function wander() {
+  if (actionPoints < 1) {
+    showJasonDialogue("你没有足够的精力继续闲逛。");
+    return;
+  }
+  if (currentLocation !== "street") {
+    showJasonDialogue("只能在街头随处闲逛。");
+    return;
+  }
+  actionPoints -= 1;
+  hunger -= 5;
+  let chance = Math.random();
+  if (chance < 0.3) {
+    money += 10;
+    showJasonDialogue("你在角落里捡到10美元，真是走运！");
+  } else {
+    showJasonDialogue("你随处转悠，但没啥收获。");
+  }
+  updateStatus();
+}
+
+// 查看画作
 function viewPaintings() {
-    if (paintings.length === 0) {
-        showJasonDialogue("你目前没有任何画作。");
-        return;
-    }
-    let message = "你的画作列表：\n\n";
-    paintings.forEach((p, idx) => {
-        message += `【${idx + 1}】《${p.name}》\n` +
-                   `风格：${p.style}\n` +
-                   `质量：${p.quality}  价值：$${p.value}\n` +
-                   `描述：${p.desc}\n\n`;
-    });
-    showJasonDialogue(message);
+  if (paintings.length === 0) {
+    showJasonDialogue("你当前没有任何画作。");
+    return;
+  }
+  let msg = "你的画作列表：\n";
+  paintings.forEach((p, i) => {
+    msg += `【${i+1}】《${p.name}》 - 价值:$${p.value}\n`;
+  });
+  showJasonDialogue(msg);
 }
 
-/****************************************
- * 示例“背包”系统
- ****************************************/
+// 背包示例
 let backpack = [];
 
 function acquireItem() {
-    const itemPool = [
-        "旧报纸", "奇怪的面具", "破损的小刀",
-        "秘密信封", "神秘钥匙", "涂鸦喷漆"
-    ];
-    let randomIndex = Math.floor(Math.random() * itemPool.length);
-    let gotItem = itemPool[randomIndex];
-
-    backpack.push(gotItem);
-    showJasonDialogue(`你在路边捡到了一个【${gotItem}】，已放入背包。`);
-    updateStatus();
+  if (actionPoints < 1) {
+    showJasonDialogue("你太累了，无法再捡东西。");
+    return;
+  }
+  actionPoints -= 1;
+  const items = ["旧报纸", "破损小刀", "奇怪的面具", "咖啡券", "神秘钥匙"];
+  let got = items[Math.floor(Math.random() * items.length)];
+  backpack.push(got);
+  showJasonDialogue(`你捡到一个【${got}】并放进背包。`);
+  updateStatus();
 }
 
 function viewBackpack() {
-    if (backpack.length === 0) {
-        showJasonDialogue("你的背包空空如也。");
-        return;
-    }
-    let msg = "你的背包物品：\n\n";
-    backpack.forEach((it, i) => {
-        msg += `(${i + 1}) ${it}\n`;
-    });
-    showJasonDialogue(msg);
+  if (backpack.length === 0) {
+    showJasonDialogue("背包空空如也。");
+    return;
+  }
+  let msg = "背包里的东西：\n";
+  backpack.forEach((it, i) => {
+    msg += `(${i+1}) ${it}\n`;
+  });
+  showJasonDialogue(msg);
 }
 
-// 出售画作(只能在黑市)
-function sellPainting() {
-    if (currentLocation !== "blackMarket") {
-        showJasonDialogue("你只能在黑市出售这些画作。");
-        return;
-    }
-    if (paintings.length === 0) {
-        showJasonDialogue("你没有画作可卖。");
-        return;
-    }
-    let painting = paintings.shift();
-    money += painting.value;
-    showJasonDialogue(`你卖出了一幅画，获得 $${painting.value}`);
-    updateStatus();
-}
-
-// 街头闲逛
-function wander() {
-    if (currentLocation !== "street") {
-        showJasonDialogue("只有在街头才能随处闲逛。");
-        return;
-    }
-    if (actionPoints < 1) {
-        showJasonDialogue("你没有足够的精力继续闲逛。");
-        return;
-    }
-    actionPoints -= 1;
-    hunger -= 5;
-    let chance = Math.random();
-    if (chance < 0.3) {
-        money += 10;
-        showJasonDialogue("在街头捡到 10 美元，真是走运！");
-    } else {
-        showJasonDialogue("你随处转悠，但没什么收获。");
-    }
-    updateStatus();
-}
-
-// ===================== 结束一天 =====================
+// 结束一天
 function endDay() {
-    actionPoints = 12;
-    day += 1;
-    hunger -= 20;
-    updateStatus();
-
-    let eventLog = document.getElementById("eventLog");
-    if (eventLog) {
-        eventLog.innerText = "今日事件：" + randomEvent();
-    }
-
-    localStorage.removeItem("jasonDialogue");
-    chatWithJason();
+  actionPoints = 12;
+  day += 1;
+  hunger -= 20;
+  // 每天对话重置
+  localStorage.removeItem("jasonDialogue");
+  updateStatus();
+  document.getElementById("eventLog").innerText = "今日事件：" + randomEvent();
+  chatWithJason();
 }
 
-// ===================== 将函数挂到 window，供 HTML onclick="xxx()" =====================
+// ============ 将函数挂到 window (若有需要) ============
+window.travelToLocation = travelToLocation; 
 window.eat = eat;
 window.work = work;
 window.draw = draw;
 window.sellPainting = sellPainting;
 window.wander = wander;
-window.endDay = endDay;
-window.resetGame = resetGame;
-window.travelToLocation = travelToLocation;
 window.viewPaintings = viewPaintings;
 window.acquireItem = acquireItem;
 window.viewBackpack = viewBackpack;
+window.endDay = endDay;
+window.resetGame = resetGame;
+
+// ============ 初始化 ============
+document.addEventListener("DOMContentLoaded", () => {
+  loadGame();
+  updateStatus(); // 会触发renderActionsByLocation，生成按钮
+
+  // 页面加载后不额外扣AP，只是刷新UI
+  // 并显示初始地点对话
+  document.getElementById("jasonDialogue").innerText = 
+    `你身处【${locations[currentLocation].name}】\n${locations[currentLocation].description}`;
+  document.getElementById("eventLog").innerText = "事件：" + placeRandomEvent(currentLocation);
+
+  // 生成今天的杰森对话
+  chatWithJason();
+});
