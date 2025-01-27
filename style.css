@@ -1,54 +1,72 @@
-/* style.css (示例) */
-/* 黑暗背景 + 大框 */
+/* =============================
+   1. 页面整体：背景、标题、字体
+============================= */
+
 body {
   margin: 0;
   padding: 20px;
-  background-color: #000;
+  background-color: #000000; 
   color: rgb(200, 180, 190);
-  text-align: center;
   font-family: 'Arial', sans-serif;
+  text-align: center;
 }
 
+/* 顶部大标题 */
 h1 {
-  font-size: 28px;
-  margin: 10px 0 5px;
+  font-size: 26px;
+  margin: 0 0 5px 0;
   color: rgb(220, 180, 190);
 }
 
+/* 副标题 (小一点) */
 .subtitle {
   font-size: 14px;
   color: rgb(183, 96, 138);
   margin-bottom: 20px;
 }
 
+/* =============================
+   2. 大框 main-container
+============================= */
+
 .main-container {
-  background: rgb(45, 40, 44);
+  background: rgb(45, 40, 44); /* 深色背景 */
   padding: 20px;
   border-radius: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  box-shadow: 0 0 10px rgba(183, 96, 138, 0.8);
+  max-width: 600px;      /* 宽度可再调 */
+  margin: 0 auto;        /* 居中 */
+  box-shadow: 0 0 10px rgba(183, 96, 138, 0.8); /* 粉色阴影 */
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 }
 
-/* 状态栏，平均分配宽度 */
+/* =============================
+   3. 状态栏
+============================= */
+
 .status-container {
   display: flex;
-  align-items: center;
+  /* 多列均分，让5个状态等宽 */
   justify-content: space-around;
-  flex-wrap: wrap; 
+  align-items: center;
   width: 100%;
+  flex-wrap: wrap; 
   gap: 10px;
   font-size: 14px;
 }
 
+/* 让每个span都能居中并等分 */
 .status-container span {
   flex: 1;
+  min-width: 80px; 
   text-align: center;
 }
+
+/* =============================
+   4. 地点 / 行动 标题
+============================= */
 
 h2 {
   font-size: 18px;
@@ -56,41 +74,49 @@ h2 {
   color: rgb(210, 180, 200);
 }
 
-/* 地点、行动容器：网格布局 */
-.location-container,
+/* =============================
+   5. 地点 / 行动按钮容器
+============================= */
+
+/* 网格布局，让按钮在一行或多行自动排布 */
+.location-container, 
 .action-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 10px;
   width: 100%;
   padding: 10px 0;
 }
 
-/* 按钮 */
+/* 按钮统一样式 */
 button {
   background: none;
-  border: 1px solid rgb(183,96,138);
-  color: rgb(183,96,138);
+  border: 1px solid rgb(183, 96, 138);
+  color: rgb(183, 96, 138);
   font-size: 14px;
   cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
   padding: 8px 12px;
   border-radius: 6px;
-  transition: .2s;
-  width: 100%;
+  width: 100%; /* 占满网格单元 */
 }
 
 button:hover {
-  background-color: rgba(183,96,138,0.2);
+  background-color: rgba(183, 96, 138, 0.2);
 }
 
-/* 对话 & 事件 */
+/* =============================
+   6. 对话 & 事件展示框
+============================= */
+
 .dialogue-box {
-  background: linear-gradient(135deg, rgba(45,40,44,1), rgba(84,63,75,0.8));
+  background: linear-gradient(135deg, rgba(45, 40, 44, 1), rgba(84, 63, 75, 0.8));
   padding: 15px;
   border-radius: 10px;
   width: 100%;
   text-align: left;
-  box-shadow: 0 0 8px rgba(84,63,75,0.6);
+  box-shadow: 0 0 8px rgba(84, 63, 75, 0.6);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -98,19 +124,40 @@ button:hover {
 
 #eventLog {
   font-size: 14px;
-  color: rgb(210,180,200);
-}
-#jasonDialogue {
-  font-size: 15px;
-  color: rgb(183,96,138);
+  color: rgb(210, 180, 200);
 }
 
-/* 响应式 */
-@media (max-width:600px) {
-  body { padding: 10px; }
-  h1 { font-size:24px; }
-  .subtitle { font-size:13px; margin-bottom:15px; }
-  .main-container { padding:15px; border-radius:15px; }
-  .status-container { font-size:13px; gap:5px; }
-  button { font-size:13px; padding:6px 8px; }
+#jasonDialogue {
+  font-size: 15px;
+  color: rgb(183, 96, 138);
+}
+
+/* =============================
+   7. 响应式（手机端）
+============================= */
+@media screen and (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .main-container {
+    padding: 15px;
+    border-radius: 15px;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  .subtitle {
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+  .status-container {
+    font-size: 13px;
+  }
+  button {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+  #jasonDialogue {
+    font-size: 14px;
+  }
 }
