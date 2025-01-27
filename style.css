@@ -1,74 +1,53 @@
-/* ========== 基础黑暗主题，整体较紧凑 ========== */
+/* ====== 黑暗主题 & 全局样式 ====== */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #000000;
     color: rgb(200, 180, 190);
     text-align: center;
-    margin: 0; 
-    padding: 10px; /* 减小Padding，避免过多留白 */
+    margin: 0;
+    padding: 10px;
 }
 
-/* 主要容器 */
-.main-container {
-    background: rgb(45, 40, 44);
-    padding: 15px;
-    border-radius: 10px; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px; 
-    max-width: 500px; /* 宽度再缩窄一点，让手机端更好适配 */
-    margin: 0 auto 20px auto; 
-    box-shadow: 0 0 8px rgba(183, 96, 138, 0.8);
-}
-
-/* 状态栏：更小字体、更紧凑间距 */
+/* ====== 主要容器 ====== */
 .status-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     width: 100%;
-    padding: 5px 0; 
-    font-size: 14px; 
+    padding: 8px 0;
+    font-size: 14px;
 }
 
-/* 标题H1、H2等稍微缩小 */
+/* 标题 */
 h1 {
     font-size: 20px;
-    margin: 5px 0;
+    margin: 10px 0;
 }
 h2 {
     font-size: 16px;
-    margin: 5px 0;
+    margin: 8px 0;
 }
 
-/* ========== 网格布局，让按钮紧凑排布 ========== */
+/* ====== 地点 & 行动按钮：使用网格布局，使界面紧凑 ====== */
 .location-container,
-.button-container {
-    width: 100%;
-    /* 采用网格布局，自动填充列 */
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    /* 每个按钮至少100px宽，空间足时多列，否则少列 */
-    gap: 8px; 
-    margin: 5px 0;
+#actionContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+    margin: 8px 0;
     padding: 8px 0;
-    /* 可加一个浅色分割线：可选 */
-    border-top: 1px solid rgba(183, 96, 138, 0.3);
-    border-bottom: 1px solid rgba(183, 96, 138, 0.3);
 }
 
-/* 按钮统一样式 */
+/* 按钮样式 */
 button {
     background: none;
     border: 1px solid rgb(183, 96, 138);
     color: rgb(183, 96, 138);
-    font-size: 14px; 
+    font-size: 14px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-in-out;
-    padding: 6px 8px; 
+    padding: 6px 10px;
     border-radius: 5px;
-    /* 宽度：让按钮自动撑满网格 */
     width: 100%;
 }
 
@@ -76,18 +55,18 @@ button:hover {
     background-color: rgba(183, 96, 138, 0.2);
 }
 
-/* 对话与事件容器 (dialogue-box) */
+/* ====== 对话 & 事件框 ====== */
 .dialogue-box {
     background: linear-gradient(135deg, rgba(45, 40, 44, 1), rgba(84, 63, 75, 0.8));
-    padding: 10px; 
+    padding: 10px;
     border-radius: 8px;
     width: 90%;
     box-shadow: 0 0 6px rgba(84, 63, 75, 0.6);
     display: flex;
-    flex-direction: column; 
-    gap: 8px; 
+    flex-direction: column;
+    gap: 6px;
     margin-top: 10px;
-    text-align: left; /* 或 center, 看你喜好 */
+    text-align: left;
     margin-left: auto;
     margin-right: auto;
 }
@@ -96,48 +75,31 @@ button:hover {
 #eventLog {
     color: rgb(210, 180, 200);
     font-size: 13px;
-    order: -1;  /* 让事件排在最前面 */
 }
 
-/* 对话文字 */
+/* 对话内容 */
 #jasonDialogue {
     color: rgb(183, 96, 138);
     font-size: 14px;
     font-weight: normal;
 }
 
-/* 如果想让对话也居中可以再加回 text-align: center; */
-
-/* 分割线 divider，如需可保留 */
-.divider {
-    width: 80%;
-    height: 1px;
-    background-color: rgba(183, 96, 138, 0.5);
-    margin: 5px auto;
-}
-
-/* ========== 在较小屏幕下做进一步压缩 ========== */
+/* ====== 响应式优化 (适配手机) ====== */
 @media screen and (max-width: 500px) {
     body {
         padding: 5px;
     }
-    .main-container {
-        padding: 10px;
-        gap: 8px;
-        margin: 0 auto;
+    .status-container {
+        font-size: 12px;
     }
     h1 {
         font-size: 18px;
-    }
-    .status-container {
-        font-size: 13px;
-        padding: 4px 0;
     }
     button {
         font-size: 13px;
         padding: 5px;
     }
-    #eventLog, #jasonDialogue {
-        font-size: 13px;
+    .dialogue-box {
+        width: 95%;
     }
 }
