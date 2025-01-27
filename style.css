@@ -1,105 +1,143 @@
-/* ====== 黑暗主题 & 全局样式 ====== */
+/* ======================
+   整体黑暗主题 + 大框风格
+====================== */
+
+/* 网页背景、通用字体 */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #000000;
-    color: rgb(200, 180, 190);
-    text-align: center;
-    margin: 0;
-    padding: 10px;
+  margin: 0;
+  padding: 20px;
+  background-color: #000000;
+  font-family: "Arial", sans-serif;
+  color: rgb(200, 180, 190);
+  text-align: center;
 }
 
-/* ====== 主要容器 ====== */
-.status-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 8px 0;
-    font-size: 14px;
-}
-
-/* 标题 */
+/* 主标题 */
 h1 {
-    font-size: 20px;
-    margin: 10px 0;
+  font-size: 28px; /* 适度大一些 */
+  margin: 10px 0 5px 0;
+  color: rgb(220, 180, 190);
 }
+
+/* 副标题 */
+.subtitle {
+  font-size: 14px;
+  color: rgb(183, 96, 138);
+  margin-bottom: 20px;
+}
+
+/* 大框容器 */
+.main-container {
+  background: rgb(45, 40, 44);
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 600px; 
+  margin: 0 auto; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(183, 96, 138, 0.8);
+  gap: 15px; 
+}
+
+/* 状态栏 */
+.status-container {
+  display: flex;
+  flex-wrap: wrap;    /* 允许换行，避免手机端挤 */
+  justify-content: space-around;
+  width: 100%;
+  gap: 10px;
+  font-size: 14px;
+}
+
+/* 小标题 (地点 / 行动) */
 h2 {
-    font-size: 16px;
-    margin: 8px 0;
+  font-size: 18px;
+  color: rgb(210, 180, 200);
+  margin: 0;
+  padding: 5px 0;
 }
 
-/* ====== 地点 & 行动按钮：使用网格布局，使界面紧凑 ====== */
+/* 地点 / 行动 容器：使用网格布局 */
 .location-container,
-#actionContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 8px;
-    margin: 8px 0;
-    padding: 8px 0;
+.action-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0;
 }
 
-/* 按钮样式 */
+/* 通用按钮样式 */
 button {
-    background: none;
-    border: 1px solid rgb(183, 96, 138);
-    color: rgb(183, 96, 138);
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-    padding: 6px 10px;
-    border-radius: 5px;
-    width: 100%;
+  background: none;
+  border: 1px solid rgb(183, 96, 138);
+  color: rgb(183, 96, 138);
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 100%;
 }
 
 button:hover {
-    background-color: rgba(183, 96, 138, 0.2);
+  background-color: rgba(183, 96, 138, 0.2);
 }
 
-/* ====== 对话 & 事件框 ====== */
+/* 对话 & 事件框 */
 .dialogue-box {
-    background: linear-gradient(135deg, rgba(45, 40, 44, 1), rgba(84, 63, 75, 0.8));
-    padding: 10px;
-    border-radius: 8px;
-    width: 90%;
-    box-shadow: 0 0 6px rgba(84, 63, 75, 0.6);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 10px;
-    text-align: left;
-    margin-left: auto;
-    margin-right: auto;
+  background: linear-gradient(135deg, rgba(45,40,44,1), rgba(84,63,75,0.8));
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  text-align: left;
+  box-shadow: 0 0 8px rgba(84,63,75,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* 今日事件 */
+/* 事件 / 对话 */
 #eventLog {
-    color: rgb(210, 180, 200);
-    font-size: 13px;
+  font-size: 14px;
+  color: rgb(210,180,200);
 }
 
-/* 对话内容 */
 #jasonDialogue {
-    color: rgb(183, 96, 138);
-    font-size: 14px;
-    font-weight: normal;
+  font-size: 15px;
+  color: rgb(183,96,138);
 }
 
-/* ====== 响应式优化 (适配手机) ====== */
-@media screen and (max-width: 500px) {
-    body {
-        padding: 5px;
-    }
-    .status-container {
-        font-size: 12px;
-    }
-    h1 {
-        font-size: 18px;
-    }
-    button {
-        font-size: 13px;
-        padding: 5px;
-    }
-    .dialogue-box {
-        width: 95%;
-    }
+/* 响应式：小屏幕再稍微调整 */
+@media screen and (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .main-container {
+    padding: 15px;
+    border-radius: 15px;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  .subtitle {
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+  .status-container {
+    font-size: 13px;
+    gap: 5px;
+  }
+  h2 {
+    font-size: 16px;
+  }
+  button {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+  #jasonDialogue {
+    font-size: 14px;
+  }
 }
