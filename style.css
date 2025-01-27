@@ -47,14 +47,25 @@ h1 {
 ============================= */
 
 .status-container {
-  display: flex;
-  /* 多列均分，让5个状态等宽 */
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  flex-wrap: wrap; 
+  /* 用网格布局替代 flex，指定 5 列或自动适应 */
+  display: grid;
+  /* 如果你想 5 列固定，可直接 repeat(5, 1fr) */
+  /* 如果想根据屏幕自动换行，则可用 auto-fit/auto-fill */
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
+  width: 100%;
   font-size: 14px;
+  /* 让网格单元里的文字居中 */
+  text-align: center;
+  /* 如果想整体不要贴太紧，可适当加 padding */
+  padding: 10px 0;
+}
+
+/* 如果原先对 span 的 flex: 1, min-width 有设置，可以删除或注释掉 */
+.status-container span {
+  /* 改用 grid 后，不需要再用 flex:1 之类了 */
+  /* 可根据需要添加内边距，让每个状态块看着更舒服 */
+  padding: 5px 0;
 }
 
 /* 让每个span都能居中并等分 */
