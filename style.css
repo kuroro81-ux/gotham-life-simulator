@@ -47,7 +47,6 @@ h1 {
 ============================= */
 
 .status-container {
-.status-container {
   display: grid;
   /* 三列，如果只放 5 个项目，会自动分为两行 */
   grid-template-columns: repeat(3, 1fr);
