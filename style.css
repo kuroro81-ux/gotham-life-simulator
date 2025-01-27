@@ -58,9 +58,9 @@ button:hover {
     background-color: rgba(183, 96, 138, 0.2);
 }
 
-/* 杰森对话 & 事件日志合并 */
+/* 杰森对话 & 事件日志合并（新增渐变背景） */
 .dialogue-box {
-    background: rgb(45, 40, 44);
+    background: linear-gradient(135deg, rgba(45, 40, 44, 1), rgba(84, 63, 75, 0.8));
     padding: 15px;
     border-radius: 10px;
     width: 90%;
