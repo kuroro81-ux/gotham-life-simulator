@@ -69,8 +69,6 @@ function resetGame() {
     updateStatus();
 }
 
-// ===================== 切换地点的函数 =====================
-function travelToLocation(locKey) {
 /**
  * 切换地点：
  *   locKey : "apartment", "street", "blackMarket", ...
@@ -208,7 +206,7 @@ function chatWithJason() {
     }
 
     const dialogues = [
-            "杰森：哥谭的街头永远不安全。\n他倚靠在墙上，眼神游离了一会儿，像是想到了什么不太愉快的回忆。",
+        "杰森：哥谭的街头永远不安全。\n他倚靠在墙上，眼神游离了一会儿，像是想到了什么不太愉快的回忆。",
         "杰森：今天遇到了迪克，我们聊了聊。\n他勾起嘴角，像是在回忆什么。'这家伙还是那么多话，不过至少他还愿意听我说点什么。'",
         "杰森：有时候，我在想如果布鲁斯……\n他的话语断在半空中，最终还是没有继续下去。沉默中，你隐约听见他低声叹息。",
         "杰森：你一个人住在这破地方，真的安全吗？\n他皱着眉，看着你住的公寓楼，眼神有些不放心。'如果有事，给我打电话。'他的语气里带着不容置疑的坚定。",
@@ -227,6 +225,7 @@ function chatWithJason() {
     localStorage.setItem("jasonDialogue", dialogue);
     showJasonDialogue(dialogue);
 }
+
 
 // ===================== 通用随机事件 =====================
 function randomEvent() {
@@ -292,7 +291,6 @@ function randomEvent() {
 
 // 吃饭(仅在公寓能执行？可自行决定)
 function eat() {
-    // 若你希望只能在公寓吃饭，可加判断:
     if (currentLocation !== "apartment") {
         showJasonDialogue("你现在不在公寓，无法做饭或点外卖。");
         return;
@@ -324,40 +322,27 @@ function work() {
     updateStatus();
 }
 
-// 画画(只能在公寓进行)
 /****************************************
- * 一、修改后的画作系统
+ * 画作系统
  ****************************************/
-
-/**
- * 画画：消耗AP、饥饿度，得到一幅新画作
- * 每次画画都会 prompt 让玩家给画作命名
- * 然后随机生成 风格 和 描述，增强乐趣
- */
 function draw() {
-    // 如果你有“地点系统”，可判断地点是否是公寓
-    // if (currentLocation !== "apartment") {
-    //     showJasonDialogue("这里不方便作画，需要回到公寓。");
-    //     return;
-    // }
-
     if (actionPoints < 2) {
         showJasonDialogue("你没有足够的精力作画。");
         return;
     }
+    if (currentLocation !== "apartment") {
+        showJasonDialogue("这里不方便作画，需要回到公寓。");
+        return;
+    }
 
-    // 扣除行动点与饥饿度
     actionPoints -= 2;
     hunger -= 10;
 
-    // 随机质量和价值
     let quality = Math.floor(Math.random() * 100) + 1;
     let value = quality * 2;
 
-    // 提示玩家输入画作名称
     let paintingName = prompt("给你的新画作取个名字吧？（可留空）") || "未命名";
 
-    // 随机风格
     const styleOptions = [
         "写实主义", "超现实主义", "抽象派",
         "波普艺术", "印象派", "表现主义",
@@ -365,7 +350,6 @@ function draw() {
     ];
     let randomStyle = styleOptions[Math.floor(Math.random() * styleOptions.length)];
 
-    // 随机描述
     const descOptions = [
         "仿佛蕴含着城市的黑暗气息。",
         "带着哥谭特有的阴郁，却又闪烁些许希望。",
@@ -375,16 +359,14 @@ function draw() {
     ];
     let randomDesc = descOptions[Math.floor(Math.random() * descOptions.length)];
 
-    // 向 paintings 数组添加新的画作对象
     paintings.push({
         name: paintingName,
         style: randomStyle,
         desc: randomDesc,
-        quality: quality,
-        value: value
+        quality,
+        value
     });
 
-    // 显示对话
     showJasonDialogue(
         `你完成了新画作：《${paintingName}》\n` +
         `风格：${randomStyle}\n` +
@@ -395,16 +377,11 @@ function draw() {
     updateStatus();
 }
 
-/**
- * 查看所有画作
- * 将玩家当前拥有的画作详情一次性展示出来
- */
 function viewPaintings() {
     if (paintings.length === 0) {
         showJasonDialogue("你目前没有任何画作。");
         return;
     }
-
     let message = "你的画作列表：\n\n";
     paintings.forEach((p, idx) => {
         message += `【${idx + 1}】《${p.name}》\n` +
@@ -412,24 +389,15 @@ function viewPaintings() {
                    `质量：${p.quality}  价值：$${p.value}\n` +
                    `描述：${p.desc}\n\n`;
     });
-
     showJasonDialogue(message);
 }
 
-
 /****************************************
- * 二、示例“背包”系统
+ * 示例“背包”系统
  ****************************************/
-
-// 定义一个背包数组（如果没有的话）
 let backpack = [];
 
-/**
- * 获取/捡到某个道具。
- * 这里演示：随机生成一个物品，放进 backpack
- */
 function acquireItem() {
-    // 你可以在此随机生成一个物品或让玩家输入
     const itemPool = [
         "旧报纸", "奇怪的面具", "破损的小刀",
         "秘密信封", "神秘钥匙", "涂鸦喷漆"
@@ -437,29 +405,21 @@ function acquireItem() {
     let randomIndex = Math.floor(Math.random() * itemPool.length);
     let gotItem = itemPool[randomIndex];
 
-    // 放进背包
     backpack.push(gotItem);
-
     showJasonDialogue(`你在路边捡到了一个【${gotItem}】，已放入背包。`);
     updateStatus();
 }
 
-/**
- * 查看背包物品
- */
 function viewBackpack() {
     if (backpack.length === 0) {
         showJasonDialogue("你的背包空空如也。");
         return;
     }
-    // 展示背包物品
     let msg = "你的背包物品：\n\n";
     backpack.forEach((it, i) => {
         msg += `(${i + 1}) ${it}\n`;
     });
-
     showJasonDialogue(msg);
-}
 }
 
 // 出售画作(只能在黑市)
@@ -478,7 +438,7 @@ function sellPainting() {
     updateStatus();
 }
 
-// 示例：街头闲逛 wander
+// 街头闲逛
 function wander() {
     if (currentLocation !== "street") {
         showJasonDialogue("只有在街头才能随处闲逛。");
@@ -507,18 +467,16 @@ function endDay() {
     hunger -= 20;
     updateStatus();
 
-    // 触发随机事件（通用版本）
     let eventLog = document.getElementById("eventLog");
     if (eventLog) {
         eventLog.innerText = "今日事件：" + randomEvent();
     }
 
-    // 清除当日对话缓存，生成新的
     localStorage.removeItem("jasonDialogue");
     chatWithJason();
 }
 
-// ===================== 将函数挂到 window，HTML 中才能 onclick="xxx()" 调用 =====================
+// ===================== 将函数挂到 window，供 HTML onclick="xxx()" =====================
 window.eat = eat;
 window.work = work;
 window.draw = draw;
@@ -526,14 +484,7 @@ window.sellPainting = sellPainting;
 window.wander = wander;
 window.endDay = endDay;
 window.resetGame = resetGame;
-window.travelToLocation = travelToLocation; // 前往某地点
-
-// ===================== 初始化游戏 =====================
-document.addEventListener("DOMContentLoaded", function() {
-    loadGame();
-    updateStatus();
-    // 载入后，先让角色出现在当前地点
-    travelToLocation(currentLocation);
-    // 生成当日对话
-    chatWithJason();
-});
+window.travelToLocation = travelToLocation;
+window.viewPaintings = viewPaintings;
+window.acquireItem = acquireItem;
+window.viewBackpack = viewBackpack;
