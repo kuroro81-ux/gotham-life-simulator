@@ -1,25 +1,26 @@
-/* 黑暗主题 */
+/* ========== 基础黑暗主题 ========== */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #000000;
     color: rgb(200, 180, 190);
     text-align: center;
-    padding: 20px;
+    padding: 10px; /* 原先 20px，减小为 10px */
+    margin: 0;     /* 去掉默认的 body 外间距 */
 }
 
 /* 主要容器 */
 .main-container {
     background: rgb(45, 40, 44);
-    padding: 20px;
-    border-radius: 20px;
+    padding: 15px;                 /* 原先 20px，稍微减小 */
+    border-radius: 10px;          /* 原先 20px，减小圆角 */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;                     /* 原先 15px */
     max-width: 600px;
-    margin: 20px auto;
-    box-shadow: 0 0 10px rgba(183, 96, 138, 0.8);
+    margin: 0 auto 20px auto;     /* 去掉多余上间距，只保留底部一点 */
+    box-shadow: 0 0 8px rgba(183, 96, 138, 0.8);
 }
 
 /* 状态栏 */
@@ -27,39 +28,38 @@ body {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    padding: 10px 0;
+    padding: 5px 0;  /* 原先 10px */
+    font-size: 14px; /* 稍微缩小字体 */
 }
 
-/* 📌 地图区容器 */
-.location-container {
+/* “地图”和“行动”按钮容器 */
+.button-container, 
+.location-container {  /* 如果你分开用了，就都写上 */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;       /* 原先 10px */
     width: 100%;
-    padding: 10px 0;
+    padding: 8px 0; /* 原先 10px */
 }
 
-/* 选项（行动按钮） */
-.button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 10px 0;
+/* 标题 (如 "地点"、"行动") 可以做略小 */
+.button-container h2,
+.location-container h2 {
+    font-size: 18px; /* 适度缩小 */
+    margin: 5px 0;
 }
 
-/* 按钮统一样式 */
+/* 按钮 */
 button {
     background: none;
     border: 1px solid rgb(183, 96, 138);
     color: rgb(183, 96, 138);
-    font-size: 16px;
+    font-size: 14px;            /* 原先 16px */
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-in-out;
-    padding: 8px 12px;
+    padding: 6px 10px;          /* 原先 8px 12px，稍微缩小 */
     border-radius: 5px;
     width: 80%;
 }
@@ -68,40 +68,81 @@ button:hover {
     background-color: rgba(183, 96, 138, 0.2);
 }
 
-/* 对话与事件容器（dialogue-box） */
+/* 对话 & 事件 容器 */
 .dialogue-box {
     background: linear-gradient(135deg, rgba(45, 40, 44, 1), rgba(84, 63, 75, 0.8));
-    padding: 15px;
-    border-radius: 10px;
+    padding: 12px;                    /* 原先 15px */
+    border-radius: 8px;              /* 原先 10px */
     width: 90%;
     text-align: center;
-    margin-top: 15px;
-    box-shadow: 0 0 8px rgba(84, 63, 75, 0.6);
+    box-shadow: 0 0 6px rgba(84, 63, 75, 0.6);
     display: flex;
-    flex-direction: column; /* 竖直排列 */
-    gap: 10px; /* 间距 */
+    flex-direction: column; 
+    gap: 8px;                         /* 原先 10px */
+    margin-top: 10px;                 /* 原先 15px */
 }
 
-/* 今日事件，调整到对话框上方 */
+/* 今日事件 */
 #eventLog {
-    color: rgb(210, 180, 200); /* 浅紫色 */
-    font-size: 14px;
-    padding-bottom: 8px;
-    order: -1; /* 让今日事件排在最前面 */
+    color: rgb(210, 180, 200); 
+    font-size: 14px;       /* 原先 14px 保持或更小也行 */
+    padding-bottom: 5px;   /* 原先 8px */
+    order: -1;             /* 让今日事件排在最前面 */
 }
 
-/* 分割线（如果需要） */
+/* 分割线（如果有用到） */
 .divider {
     width: 80%;
     height: 1px;
-    background-color: rgba(183, 96, 138, 0.5); /* 分割线颜色 */
+    background-color: rgba(183, 96, 138, 0.5);
     margin: 5px auto;
 }
 
-/* 杰森的对话，粉色，去除加粗 */
+/* 杰森对话 */
 #jasonDialogue {
-    color: rgb(183, 96, 138); 
-    font-size: 16px;
-    padding-top: 8px;
+    color: rgb(183, 96, 138);
+    font-size: 14px;     /* 原先 16px，稍微小一点 */
+    padding-top: 5px;    /* 原先 8px */
     font-weight: normal;
+}
+
+/* ========== 手机端再进一步压缩 ========== */
+@media screen and (max-width: 600px) {
+    /* 整体再缩小一些 */
+    body {
+        padding: 5px;  /* 减少外部间距 */
+    }
+    .main-container {
+        padding: 10px;
+        gap: 8px;
+        margin: 0 auto 10px auto; /* 删掉多余空白 */
+    }
+    h1 {
+        font-size: 20px;  /* 缩小标题 */
+        margin: 8px 0;
+    }
+    .status-container {
+        padding: 5px 0;
+        font-size: 13px;
+    }
+    .button-container, .location-container {
+        gap: 6px;
+        padding: 5px 0;
+    }
+    button {
+        font-size: 13px;
+        padding: 5px 8px;
+        width: 85%; /* 稍微拉宽一点 */
+    }
+    .dialogue-box {
+        padding: 10px;
+        gap: 6px;
+        margin-top: 8px;
+    }
+    #eventLog {
+        font-size: 13px;
+    }
+    #jasonDialogue {
+        font-size: 13px;
+    }
 }
