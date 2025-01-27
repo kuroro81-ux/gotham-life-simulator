@@ -4,28 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>哥谭生活模拟器</title>
-  <!-- 你的CSS -->
+  <!-- 引用你的CSS -->
   <link rel="stylesheet" href="./style.css">
-  <!-- 你的JS -->
+
+  <!-- 这里先加载 intro.js （开场剧情） 再加载 app.js （主要逻辑） -->
+  <script src="./intro.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
-  <!-- 标题 & 副标题（图二风格） -->
+  <!-- 标题 & 副标题 -->
   <h1>欢迎来到哥谭</h1>
   <p class="subtitle">艾琳·凯瑟琳的生存挑战开始！</p>
 
   <!-- 大框容器 -->
   <div class="main-container">
+
     <!-- 状态栏：第X天 / AP / 饱食度 / 资金 / 画作 -->
     <div class="status-container">
-      <span>第 <span id="day">1</span> 天</span>
+      <span>第 <span id="day">0</span> 天</span>  <!-- 注意：day初始设为0，第一次加载才会显示剧情 -->
       <span>AP: <span id="ap">12</span>/12</span>
       <span>饱食度: <span id="hunger">100</span></span>
       <span>资金: $<span id="money">100</span></span>
       <span>画作: <span id="paintings">0</span></span>
     </div>
 
-    <!-- 地点标题 & 按钮 (如果你不打算JS动态生成地点按钮，可静态写入) -->
+    <!-- 地点标题 & 按钮 -->
     <h2>地点</h2>
     <div class="location-container">
       <button onclick="travelToLocation('apartment')">公寓</button>
@@ -33,10 +36,10 @@
       <button onclick="travelToLocation('blackMarket')">黑市</button>
     </div>
 
-    <!-- 行动标题 & 容器 (由JS动态生成行动按钮) -->
+    <!-- 行动标题 & 容器 -->
     <h2>行动</h2>
     <div id="actionContainer" class="action-container">
-      <!-- 画画 / 吃饭 / 卖画 / etc. 由 JS 动态插入 -->
+      <!-- 这里可以静态或用JS动态插入各种行动按钮，如画画/吃饭等 -->
     </div>
 
     <!-- 对话 + 事件展示框 -->
@@ -44,6 +47,7 @@
       <p id="eventLog">事件：无</p>
       <p id="jasonDialogue">杰森：......</p>
     </div>
+
   </div>
 </body>
 </html>
