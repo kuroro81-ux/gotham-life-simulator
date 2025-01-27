@@ -5,7 +5,7 @@ let hunger = 100;         // 饥饿度
 let money = 100;          // 资金
 let paintings = [];       // 画作数组
 let actionPoints = 12;    // 当天可用行动点
-let day = 1;              // 当前天数
+let day = 0;              // 当前天数
 let typingTimeout = null; // 打字机定时器
 let jasonAffection = 0;   // 杰森好感度
 
