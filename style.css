@@ -58,7 +58,7 @@ button:hover {
     background-color: rgba(183, 96, 138, 0.2);
 }
 
-/* 杰森对话 & 事件日志合并（新增渐变背景） */
+/* 📌 交换"今日事件" 和 "杰森对话" 的位置 */
 .dialogue-box {
     background: linear-gradient(135deg, rgba(45, 40, 44, 1), rgba(84, 63, 75, 0.8));
     padding: 15px;
@@ -67,20 +67,23 @@ button:hover {
     text-align: center;
     margin-top: 15px;
     box-shadow: 0 0 8px rgba(84, 63, 75, 0.6);
+    display: flex;
+    flex-direction: column; /* 竖直排列 */
+    gap: 10px; /* 间距 */
 }
 
-/* 杰森对话文本 */
-#jasonDialogue {
-    color: rgb(183, 96, 138); /* 粉色 */
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-/* 今日事件文本 */
+/* 📌 今日事件，调整到上方 */
 #eventLog {
     color: rgb(210, 180, 200); /* 浅紫色 */
     font-size: 14px;
-    margin-top: 5px;
-    border-top: 1px solid rgba(183, 96, 138, 0.5); /* 细分割线 */
+    border-bottom: 1px solid rgba(183, 96, 138, 0.5); /* 添加底部分割线 */
+    padding-bottom: 8px;
+}
+
+/* 📌 杰森的对话，调整到下方 */
+#jasonDialogue {
+    color: rgb(183, 96, 138); /* 粉色 */
+    font-size: 16px;
+    font-weight: bold;
     padding-top: 8px;
 }
