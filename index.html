@@ -1,20 +1,16 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>哥谭生活模拟器</title>
-  <!-- 引入CSS -->
-  <link rel="stylesheet" href="./style.css">
-  <!-- 引入JS -->
-  <script src="./app.js" defer></script>
+  <meta charset="utf-8" />
+  <title>欢迎来到哥谭</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <!-- 主标题 & 副标题 -->
   <h1>欢迎来到哥谭</h1>
   <p class="subtitle">艾琳·凯瑟琳的生存挑战开始！</p>
 
-  <!-- 外围大框 -->
   <div class="main-container">
     <!-- 状态栏 -->
     <div class="status-container">
@@ -25,27 +21,22 @@
       <span>画作: <span id="paintings">0</span></span>
     </div>
 
-    <!-- 地点标题 & 容器 -->
+    <!-- 地点按钮（静态写死） -->
     <h2>地点</h2>
     <div class="location-container">
-      <!-- 三个“前往XX”按钮 (如果你想写死也可，但更建议JS操作) -->
-      <!--
       <button onclick="travelToLocation('apartment')">公寓</button>
       <button onclick="travelToLocation('street')">街头</button>
       <button onclick="travelToLocation('blackMarket')">黑市</button>
-      -->
     </div>
 
-    <!-- 行动标题 & 容器(由JS动态插入按钮) -->
+    <!-- 行动容器（JS会动态生成） -->
     <h2>行动</h2>
-    <div id="actionContainer" class="action-container">
-      <!-- 画画、打工、吃饭、卖画等按钮由 JS 动态生成 -->
-    </div>
+    <div id="actionContainer" class="action-container"></div>
 
-    <!-- 对话 & 事件框 -->
+    <!-- 对话/事件 -->
     <div class="dialogue-box">
       <p id="eventLog">事件：无</p>
-      <p id="jasonDialogue">杰森：...</p>
+      <p id="jasonDialogue">杰森： ...</p>
     </div>
   </div>
 </body>
