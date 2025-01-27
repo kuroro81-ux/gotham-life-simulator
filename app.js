@@ -86,8 +86,13 @@ function showJasonDialogue(dialogue) {
     typeNext();
 }
 
-// **杰森的剧情对话**
+// **确保杰森的对话每天固定**
 function chatWithJason() {
+    let savedDialogue = localStorage.getItem("jasonDialogue"); // 读取存储的对话
+    if (savedDialogue) {
+        showJasonDialogue(savedDialogue);
+        return;
+    }
     let dialogues = [
         "杰森：哥谭的街头永远不安全。\n他倚靠在墙上，眼神游离了一会儿，像是想到了什么不太愉快的回忆。",
         "杰森：今天遇到了迪克，我们聊了聊。\n他勾起嘴角，像是在回忆什么。'这家伙还是那么多话，不过至少他还愿意听我说点什么。'",
@@ -105,8 +110,16 @@ function chatWithJason() {
     ];
 
     let dialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
+    localStorage.setItem("jasonDialogue", dialogue); // 存储当天的对话
     showJasonDialogue(dialogue);
 }
+
+// **结束一天，生成新对话**
+window.endDay = function() {
+    actionPoints = 12;
+    day += 1;
+    hunger -= 20;
+    updateStatus();
 
 // **吃饭**
 window.eat = function() {
